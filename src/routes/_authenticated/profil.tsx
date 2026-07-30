@@ -32,13 +32,13 @@ function ProfilePage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [dailyGoal, setDailyGoal] = useState(5);
+  const [monthlyGoal, setDailyGoal] = useState(200);
   const [weeklyGoal, setWeeklyGoal] = useState(50);
 
   useEffect(() => {
     if (!profile) return;
     setName(profile.display_name ?? "");
-    setDailyGoal(profile.daily_goal ?? 5);
+    setDailyGoal(profile.monthly_goal ?? 5);
     setWeeklyGoal(profile.weekly_goal ?? 50);
   }, [profile]);
 
@@ -48,7 +48,7 @@ function ProfilePage() {
     if (!profile) return;
     const { error } = await supabase
       .from("profiles")
-      .update({ display_name: name, daily_goal: dailyGoal, weekly_goal: weeklyGoal })
+      .update({ display_name: name, monthly_goal: monthlyGoal, weekly_goal: weeklyGoal })
       .eq("id", profile.id);
     if (error) {
       toast.error(error.message);
@@ -88,12 +88,12 @@ function ProfilePage() {
             <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="daily">Objectif quotidien (versets)</Label>
+            <Label htmlFor="daily">Objectif mensuel (versets)</Label>
             <Input
               id="daily"
               type="number"
               min={1}
-              value={dailyGoal}
+              value={monthlyGoal}
               onChange={(e) => setDailyGoal(Number(e.target.value))}
             />
           </div>
