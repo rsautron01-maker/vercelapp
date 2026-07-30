@@ -10,33 +10,157 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedCalendrierRouteImport } from './routes/_authenticated/calendrier'
+import { Route as AuthenticatedDefisRouteImport } from './routes/_authenticated/defis'
+import { Route as AuthenticatedJuzzRouteImport } from './routes/_authenticated/juzz'
+import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
+import { Route as AuthenticatedStatistiquesRouteImport } from './routes/_authenticated/statistiques'
+import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
+import { Route as AuthenticatedSouratesIndexRouteImport } from './routes/_authenticated/sourates/index'
+import { Route as AuthenticatedSouratesIdRouteImport } from './routes/_authenticated/sourates/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCalendrierRoute = AuthenticatedCalendrierRouteImport.update({
+  id: '/calendrier',
+  path: '/calendrier',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDefisRoute = AuthenticatedDefisRouteImport.update({
+  id: '/defis',
+  path: '/defis',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedJuzzRoute = AuthenticatedJuzzRouteImport.update({
+  id: '/juzz',
+  path: '/juzz',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedStatistiquesRoute =
+  AuthenticatedStatistiquesRouteImport.update({
+    id: '/statistiques',
+    path: '/statistiques',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTableauDeBordRoute =
+  AuthenticatedTableauDeBordRouteImport.update({
+    id: '/tableau-de-bord',
+    path: '/tableau-de-bord',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSouratesIndexRoute =
+  AuthenticatedSouratesIndexRouteImport.update({
+    id: '/sourates/',
+    path: '/sourates/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSouratesIdRoute = AuthenticatedSouratesIdRouteImport.update({
+  id: '/sourates/$id',
+  path: '/sourates/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/calendrier': typeof AuthenticatedCalendrierRoute
+  '/defis': typeof AuthenticatedDefisRoute
+  '/juzz': typeof AuthenticatedJuzzRoute
+  '/profil': typeof AuthenticatedProfilRoute
+  '/statistiques': typeof AuthenticatedStatistiquesRoute
+  '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/sourates/$id': typeof AuthenticatedSouratesIdRoute
+  '/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/calendrier': typeof AuthenticatedCalendrierRoute
+  '/defis': typeof AuthenticatedDefisRoute
+  '/juzz': typeof AuthenticatedJuzzRoute
+  '/profil': typeof AuthenticatedProfilRoute
+  '/statistiques': typeof AuthenticatedStatistiquesRoute
+  '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/sourates/$id': typeof AuthenticatedSouratesIdRoute
+  '/sourates': typeof AuthenticatedSouratesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/calendrier': typeof AuthenticatedCalendrierRoute
+  '/_authenticated/defis': typeof AuthenticatedDefisRoute
+  '/_authenticated/juzz': typeof AuthenticatedJuzzRoute
+  '/_authenticated/profil': typeof AuthenticatedProfilRoute
+  '/_authenticated/statistiques': typeof AuthenticatedStatistiquesRoute
+  '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/_authenticated/sourates/$id': typeof AuthenticatedSouratesIdRoute
+  '/_authenticated/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/calendrier'
+    | '/defis'
+    | '/juzz'
+    | '/profil'
+    | '/statistiques'
+    | '/tableau-de-bord'
+    | '/sourates/$id'
+    | '/sourates/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/calendrier'
+    | '/defis'
+    | '/juzz'
+    | '/profil'
+    | '/statistiques'
+    | '/tableau-de-bord'
+    | '/sourates/$id'
+    | '/sourates'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/calendrier'
+    | '/_authenticated/defis'
+    | '/_authenticated/juzz'
+    | '/_authenticated/profil'
+    | '/_authenticated/statistiques'
+    | '/_authenticated/tableau-de-bord'
+    | '/_authenticated/sourates/$id'
+    | '/_authenticated/sourates/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +172,109 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/calendrier': {
+      id: '/_authenticated/calendrier'
+      path: '/calendrier'
+      fullPath: '/calendrier'
+      preLoaderRoute: typeof AuthenticatedCalendrierRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/defis': {
+      id: '/_authenticated/defis'
+      path: '/defis'
+      fullPath: '/defis'
+      preLoaderRoute: typeof AuthenticatedDefisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/juzz': {
+      id: '/_authenticated/juzz'
+      path: '/juzz'
+      fullPath: '/juzz'
+      preLoaderRoute: typeof AuthenticatedJuzzRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profil': {
+      id: '/_authenticated/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AuthenticatedProfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/statistiques': {
+      id: '/_authenticated/statistiques'
+      path: '/statistiques'
+      fullPath: '/statistiques'
+      preLoaderRoute: typeof AuthenticatedStatistiquesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tableau-de-bord': {
+      id: '/_authenticated/tableau-de-bord'
+      path: '/tableau-de-bord'
+      fullPath: '/tableau-de-bord'
+      preLoaderRoute: typeof AuthenticatedTableauDeBordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sourates/': {
+      id: '/_authenticated/sourates/'
+      path: '/sourates'
+      fullPath: '/sourates/'
+      preLoaderRoute: typeof AuthenticatedSouratesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sourates/$id': {
+      id: '/_authenticated/sourates/$id'
+      path: '/sourates/$id'
+      fullPath: '/sourates/$id'
+      preLoaderRoute: typeof AuthenticatedSouratesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCalendrierRoute: typeof AuthenticatedCalendrierRoute
+  AuthenticatedDefisRoute: typeof AuthenticatedDefisRoute
+  AuthenticatedJuzzRoute: typeof AuthenticatedJuzzRoute
+  AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
+  AuthenticatedStatistiquesRoute: typeof AuthenticatedStatistiquesRoute
+  AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
+  AuthenticatedSouratesIdRoute: typeof AuthenticatedSouratesIdRoute
+  AuthenticatedSouratesIndexRoute: typeof AuthenticatedSouratesIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCalendrierRoute: AuthenticatedCalendrierRoute,
+  AuthenticatedDefisRoute: AuthenticatedDefisRoute,
+  AuthenticatedJuzzRoute: AuthenticatedJuzzRoute,
+  AuthenticatedProfilRoute: AuthenticatedProfilRoute,
+  AuthenticatedStatistiquesRoute: AuthenticatedStatistiquesRoute,
+  AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
+  AuthenticatedSouratesIdRoute: AuthenticatedSouratesIdRoute,
+  AuthenticatedSouratesIndexRoute: AuthenticatedSouratesIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
