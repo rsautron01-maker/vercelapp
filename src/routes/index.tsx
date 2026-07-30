@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Hifz — Mémoriser le Coran avec méthode" },
       {
         property: "og:description",
-        content: "Progression, calendrier de révision intelligent et défis pour ancrer votre hifz.",
+        content: "Suivez votre mémorisation du Coran : 114 sourates, révisions espacées, 10 défis et statistiques détaillées.",
       },
     ],
   }),

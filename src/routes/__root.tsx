@@ -80,19 +80,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Hifz — Mémoriser et réviser le Coran" },
+      { title: "Hifz — Mémoriser le Coran avec méthode" },
       {
         name: "description",
         content:
-          "Mémorisez le Coran sourate par sourate : progression, révisions espacées, défis et statistiques.",
+          "Suivez votre mémorisation du Coran : 114 sourates, révisions espacées, 10 défis et statistiques détaillées.",
       },
-      { property: "og:title", content: "Hifz — Mémoriser et réviser le Coran" },
+      { property: "og:title", content: "Hifz — Mémoriser le Coran avec méthode" },
       {
         property: "og:description",
-        content: "Suivi de mémorisation, calendrier de révision et défis intelligents.",
+        content: "Suivez votre mémorisation du Coran : 114 sourates, révisions espacées, 10 défis et statistiques détaillées.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Hifz — Mémoriser le Coran avec méthode" },
+      { name: "twitter:description", content: "Suivez votre mémorisation du Coran : 114 sourates, révisions espacées, 10 défis et statistiques détaillées." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/70b7ac7e-8197-45eb-ab33-0b6bb3db8346/id-preview-5a0351f2--e3b4ada0-ae02-450e-a910-0d90acb5ff06.lovable.app-1785431276721.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/70b7ac7e-8197-45eb-ab33-0b6bb3db8346/id-preview-5a0351f2--e3b4ada0-ae02-450e-a910-0d90acb5ff06.lovable.app-1785431276721.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
