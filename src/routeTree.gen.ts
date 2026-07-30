@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedSouratesIndexRouteImport } from './routes/_authenticated/sourates/index'
+import { Route as AuthenticatedSouratesIdRouteImport } from './routes/_authenticated/sourates/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,17 +42,24 @@ const AuthenticatedSouratesIndexRoute =
     path: '/sourates/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSouratesIdRoute = AuthenticatedSouratesIdRouteImport.update({
+  id: '/sourates/$id',
+  path: '/sourates/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates': typeof AuthenticatedSouratesIndexRoute
 }
 export interface FileRoutesById {
@@ -60,19 +68,21 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/_authenticated/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/_authenticated/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/tableau-de-bord' | '/sourates/'
+  fullPaths: '/' | '/auth' | '/tableau-de-bord' | '/sourates/$id' | '/sourates/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/tableau-de-bord' | '/sourates'
+  to: '/' | '/auth' | '/tableau-de-bord' | '/sourates/$id' | '/sourates'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/tableau-de-bord'
+    | '/_authenticated/sourates/$id'
     | '/_authenticated/sourates/'
   fileRoutesById: FileRoutesById
 }
@@ -119,16 +129,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSouratesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/sourates/$id': {
+      id: '/_authenticated/sourates/$id'
+      path: '/sourates/$id'
+      fullPath: '/sourates/$id'
+      preLoaderRoute: typeof AuthenticatedSouratesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
+  AuthenticatedSouratesIdRoute: typeof AuthenticatedSouratesIdRoute
   AuthenticatedSouratesIndexRoute: typeof AuthenticatedSouratesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
+  AuthenticatedSouratesIdRoute: AuthenticatedSouratesIdRoute,
   AuthenticatedSouratesIndexRoute: AuthenticatedSouratesIndexRoute,
 }
 
