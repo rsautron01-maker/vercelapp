@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedJuzzRouteImport } from './routes/_authenticated/juzz'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedSouratesIndexRouteImport } from './routes/_authenticated/sourates/index'
 import { Route as AuthenticatedSouratesIdRouteImport } from './routes/_authenticated/sourates/$id'
@@ -29,6 +30,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedJuzzRoute = AuthenticatedJuzzRouteImport.update({
+  id: '/juzz',
+  path: '/juzz',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedTableauDeBordRoute =
   AuthenticatedTableauDeBordRouteImport.update({
@@ -51,6 +57,7 @@ const AuthenticatedSouratesIdRoute = AuthenticatedSouratesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/juzz': typeof AuthenticatedJuzzRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates/': typeof AuthenticatedSouratesIndexRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/juzz': typeof AuthenticatedJuzzRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates': typeof AuthenticatedSouratesIndexRoute
@@ -67,20 +75,29 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/juzz': typeof AuthenticatedJuzzRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/_authenticated/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/tableau-de-bord' | '/sourates/$id' | '/sourates/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/juzz'
+    | '/tableau-de-bord'
+    | '/sourates/$id'
+    | '/sourates/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/tableau-de-bord' | '/sourates/$id' | '/sourates'
+  to:
+    '/' | '/auth' | '/juzz' | '/tableau-de-bord' | '/sourates/$id' | '/sourates'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/juzz'
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/sourates/$id'
     | '/_authenticated/sourates/'
@@ -115,6 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/juzz': {
+      id: '/_authenticated/juzz'
+      path: '/juzz'
+      fullPath: '/juzz'
+      preLoaderRoute: typeof AuthenticatedJuzzRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/tableau-de-bord': {
       id: '/_authenticated/tableau-de-bord'
       path: '/tableau-de-bord'
@@ -140,12 +164,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedJuzzRoute: typeof AuthenticatedJuzzRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
   AuthenticatedSouratesIdRoute: typeof AuthenticatedSouratesIdRoute
   AuthenticatedSouratesIndexRoute: typeof AuthenticatedSouratesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedJuzzRoute: AuthenticatedJuzzRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
   AuthenticatedSouratesIdRoute: AuthenticatedSouratesIdRoute,
   AuthenticatedSouratesIndexRoute: AuthenticatedSouratesIndexRoute,
