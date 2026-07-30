@@ -1,0 +1,138 @@
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  BookOpen,
+  CalendarDays,
+  LayoutDashboard,
+  Layers,
+  Trophy,
+  BarChart3,
+  UserRound,
+  LogOut,
+  Moon,
+  Sun,
+  Menu,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+
+import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { NotificationBell } from "@/components/notification-bell";
+import { GlobalSearch } from "@/components/global-search";
+
+const NAV = [
+  { to: "/tableau-de-bord", label: "Tableau de bord", icon: LayoutDashboard },
+  { to: "/sourates", label: "Sourates", icon: BookOpen },
+  { to: "/juzz", label: "Juzz", icon: Layers },
+  { to: "/calendrier", label: "Calendrier", icon: CalendarDays },
+  { to: "/defis", label: "Défis", icon: Trophy },
+  { to: "/statistiques", label: "Statistiques", icon: BarChart3 },
+  { to: "/profil", label: "Profil", icon: UserRound },
+] as const;
+
+function useTheme() {
+  const [dark, setDark] = useState(false);
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+  const toggle = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("hifz-theme", next ? "dark" : "light");
+  };
+  return { dark, toggle };
+}
+
+export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { dark, toggle } = useTheme();
+  const [openMobile, setOpenMobile] = useState(false);
+
+  async function signOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await supabase.auth.signOut();
+    navigate({ to: "/auth", replace: true });
+  }
+
+  return (
+    <div className="flex min-h-screen w-full bg-background">
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar px-4 py-6 text-sidebar-foreground transition-transform lg:static lg:translate-x-0",
+          openMobile ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <Link to="/tableau-de-bord" className="mb-8 flex items-center gap-3 px-2">
+          <span className="flex size-10 items-center justify-center rounded-xl gradient-gold text-lg font-bold text-gold-foreground">
+            ﷽
+          </span>
+          <span>
+            <span className="block font-display text-lg font-semibold leading-none">Hifz</span>
+            <span className="text-xs text-sidebar-foreground/60">Mémorisation du Coran</span>
+          </span>
+        </Link>
+
+        <nav className="flex flex-1 flex-col gap-1">
+          {NAV.map((item) => {
+            const active = pathname.startsWith(item.to);
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpenMobile(false)}
+                className={cn(
+                  "relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                  active
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+                )}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute left-0 h-6 w-1 rounded-full bg-sidebar-primary"
+                  />
+                )}
+                <item.icon className="size-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <Button variant="ghost" className="justify-start gap-3 text-sidebar-foreground/70" onClick={signOut}>
+          <LogOut className="size-4" /> Se déconnecter
+        </Button>
+      </aside>
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-xl lg:px-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setOpenMobile((v) => !v)}
+            aria-label="Ouvrir le menu"
+          >
+            <Menu className="size-5" />
+          </Button>
+          <GlobalSearch />
+          <div className="ml-auto flex items-center gap-1">
+            <NotificationBell />
+            <Button variant="ghost" size="icon" onClick={toggle} aria-label="Changer de thème">
+              {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
+            </Button>
+          </div>
+        </header>
+
+        <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
+      </div>
+    </div>
+  );
+}
