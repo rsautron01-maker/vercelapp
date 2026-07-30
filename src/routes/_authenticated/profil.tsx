@@ -32,13 +32,13 @@ function ProfilePage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [monthlyGoal, setDailyGoal] = useState(200);
+  const [monthlyGoal, setMonthlyGoal] = useState(200);
   const [weeklyGoal, setWeeklyGoal] = useState(50);
 
   useEffect(() => {
     if (!profile) return;
     setName(profile.display_name ?? "");
-    setDailyGoal(profile.monthly_goal ?? 5);
+    setMonthlyGoal(profile.monthly_goal ?? 200);
     setWeeklyGoal(profile.weekly_goal ?? 50);
   }, [profile]);
 
@@ -88,13 +88,13 @@ function ProfilePage() {
             <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="daily">Objectif mensuel (versets)</Label>
+            <Label htmlFor="monthly">Objectif mensuel (versets)</Label>
             <Input
-              id="daily"
+              id="monthly"
               type="number"
               min={1}
               value={monthlyGoal}
-              onChange={(e) => setDailyGoal(Number(e.target.value))}
+              onChange={(e) => setMonthlyGoal(Number(e.target.value))}
             />
           </div>
           <div className="space-y-2">
