@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedCalendrierRouteImport } from './routes/_authenticated/calendrier'
+import { Route as AuthenticatedDefisRouteImport } from './routes/_authenticated/defis'
 import { Route as AuthenticatedJuzzRouteImport } from './routes/_authenticated/juzz'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedSouratesIndexRouteImport } from './routes/_authenticated/sourates/index'
@@ -35,6 +36,11 @@ const AuthRoute = AuthRouteImport.update({
 const AuthenticatedCalendrierRoute = AuthenticatedCalendrierRouteImport.update({
   id: '/calendrier',
   path: '/calendrier',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDefisRoute = AuthenticatedDefisRouteImport.update({
+  id: '/defis',
+  path: '/defis',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedJuzzRoute = AuthenticatedJuzzRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/calendrier': typeof AuthenticatedCalendrierRoute
+  '/defis': typeof AuthenticatedDefisRoute
   '/juzz': typeof AuthenticatedJuzzRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/calendrier': typeof AuthenticatedCalendrierRoute
+  '/defis': typeof AuthenticatedDefisRoute
   '/juzz': typeof AuthenticatedJuzzRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/calendrier': typeof AuthenticatedCalendrierRoute
+  '/_authenticated/defis': typeof AuthenticatedDefisRoute
   '/_authenticated/juzz': typeof AuthenticatedJuzzRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/sourates/$id': typeof AuthenticatedSouratesIdRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/calendrier'
+    | '/defis'
     | '/juzz'
     | '/tableau-de-bord'
     | '/sourates/$id'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/calendrier'
+    | '/defis'
     | '/juzz'
     | '/tableau-de-bord'
     | '/sourates/$id'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/calendrier'
+    | '/_authenticated/defis'
     | '/_authenticated/juzz'
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/sourates/$id'
@@ -156,6 +168,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCalendrierRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/defis': {
+      id: '/_authenticated/defis'
+      path: '/defis'
+      fullPath: '/defis'
+      preLoaderRoute: typeof AuthenticatedDefisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/juzz': {
       id: '/_authenticated/juzz'
       path: '/juzz'
@@ -189,6 +208,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCalendrierRoute: typeof AuthenticatedCalendrierRoute
+  AuthenticatedDefisRoute: typeof AuthenticatedDefisRoute
   AuthenticatedJuzzRoute: typeof AuthenticatedJuzzRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
   AuthenticatedSouratesIdRoute: typeof AuthenticatedSouratesIdRoute
@@ -197,6 +217,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCalendrierRoute: AuthenticatedCalendrierRoute,
+  AuthenticatedDefisRoute: AuthenticatedDefisRoute,
   AuthenticatedJuzzRoute: AuthenticatedJuzzRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
   AuthenticatedSouratesIdRoute: AuthenticatedSouratesIdRoute,
