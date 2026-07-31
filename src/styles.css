@@ -205,3 +205,41 @@
     box-shadow: var(--shadow-lift);
   }
 }
+
+/* ---------- Couleurs Tajwid (légende Mu'alim al-Qur'an) ---------- */
+:root {
+  --tj-madd6: #7a0b52;
+  --tj-madd45: #ec008c;
+  --tj-madd246: #f58220;
+  --tj-ghunnah: #00a65a;
+  --tj-idgham: #a6a6a6;
+  --tj-tafkheem: #17607d;
+  --tj-qalqalah: #00aeef;
+  --tj-ikhfa: #8e44ad;
+  --tj-iqlab: #6c5ce7;
+  --tj-silent: #c2c2c2;
+}
+
+.dark {
+  --tj-madd6: #ff6ec7;
+  --tj-madd45: #ff4fb0;
+  --tj-madd246: #ffa14a;
+  --tj-ghunnah: #35d68a;
+  --tj-idgham: #b9b9b9;
+  --tj-tafkheem: #56b6d8;
+  --tj-qalqalah: #4fd2ff;
+  --tj-ikhfa: #c78bf0;
+  --tj-iqlab: #9b8bff;
+  --tj-silent: #8a8a8a;
+}
+
+.tj-madd6 { color: var(--tj-madd6); }
+.tj-madd45 { color: var(--tj-madd45); }
+.tj-madd246 { color: var(--tj-madd246); }
+.tj-ghunnah { color: var(--tj-ghunnah); }
+.tj-idgham { color: var(--tj-idgham); }
+.tj-tafkheem { color: var(--tj-tafkheem); }
+.tj-qalqalah { color: var(--tj-qalqalah); }
+.tj-ikhfa { color: var(--tj-ikhfa); }
+.tj-iqlab { color: var(--tj-iqlab); }
+.tj-silent { color: var(--tj-silent); }
