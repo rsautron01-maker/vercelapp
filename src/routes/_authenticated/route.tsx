@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/app-shell";
+import { OnboardingDialog } from "@/components/onboarding-dialog";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_authenticated")({
   },
   component: () => (
     <AppShell>
+      <OnboardingDialog />
       <Outlet />
     </AppShell>
   ),

@@ -1,13 +1,24 @@
 import { SURAHS, type Surah } from "@/data/quran";
+import { stripTajweed } from "@/lib/tajweed";
 
 export type Ayah = { numberInSurah: number; text: string };
 
-const cache = new Map<number, Ayah[]>();
+const caches = new Map<string, Map<number, Ayah[]>>();
 
-export async function fetchSurahText(surah: number): Promise<Ayah[]> {
+function cacheFor(edition: string) {
+  let cache = caches.get(edition);
+  if (!cache) {
+    cache = new Map<number, Ayah[]>();
+    caches.set(edition, cache);
+  }
+  return cache;
+}
+
+async function fetchEdition(surah: number, edition: string): Promise<Ayah[]> {
+  const cache = cacheFor(edition);
   const cached = cache.get(surah);
   if (cached) return cached;
-  const res = await fetch(`https://api.alquran.cloud/v1/surah/${surah}/quran-uthmani`);
+  const res = await fetch(`https://api.alquran.cloud/v1/surah/${surah}/${edition}`);
   if (!res.ok) throw new Error("Impossible de charger le texte de la sourate");
   const json = (await res.json()) as {
     data: { ayahs: { numberInSurah: number; text: string }[] };
@@ -19,6 +30,26 @@ export async function fetchSurahText(surah: number): Promise<Ayah[]> {
   cache.set(surah, ayahs);
   return ayahs;
 }
+
+export function fetchSurahText(surah: number) {
+  return fetchEdition(surah, "quran-uthmani");
+}
+
+/** Texte annoté avec les règles de tajwid (couleurs). */
+export function fetchSurahTajweed(surah: number) {
+  return fetchEdition(surah, "quran-tajweed");
+}
+
+/** Translittération phonétique (aide, à ne pas utiliser comme référence). */
+export function fetchSurahTranslit(surah: number) {
+  return fetchEdition(surah, "en.transliteration");
+}
+
+/** Texte arabe simple dérivé de l'édition tajwid (annotations retirées). */
+export function plainFromTajweed(text: string) {
+  return stripTajweed(text);
+}
+
 
 export type VerseRef = { surah: Surah; ayah: number; text: string };
 

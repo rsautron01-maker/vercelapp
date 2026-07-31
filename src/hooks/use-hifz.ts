@@ -48,6 +48,15 @@ async function currentUserId() {
   return data.user.id;
 }
 
+export type ProfilePrefs = {
+  reads_arabic?: string;
+  tajweed_level?: string;
+  script_mode?: string;
+  show_tajweed?: boolean;
+  onboarding_done?: boolean;
+  display_name?: string | null;
+};
+
 export function useProfile() {
   return useQuery({
     queryKey: ["profile"],
@@ -70,6 +79,23 @@ export function useProfile() {
     },
   });
 }
+
+/** Met à jour les préférences d'apprentissage (niveau, mode de lecture, tajwid). */
+export function useUpdateProfile() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (patch: ProfilePrefs) => {
+      const userId = await currentUserId();
+      const { error } = await supabase
+        .from("profiles")
+        .update({ ...patch, updated_at: new Date().toISOString() })
+        .eq("id", userId);
+      if (error) throw error;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["profile"] }),
+  });
+}
+
 
 export function useVerses() {
   return useQuery({

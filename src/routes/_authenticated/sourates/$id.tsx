@@ -1,16 +1,34 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, CalendarPlus, Check, RotateCcw } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  CalendarPlus,
+  Check,
+  Palette,
+  RotateCcw,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { SURAHS, surahOf } from "@/data/quran";
-import { fetchSurahText } from "@/lib/quran-api";
-import { useReviewMutations, useSetVerseStatus, useVerses, today } from "@/hooks/use-hifz";
+import { fetchSurahTajweed, fetchSurahTranslit } from "@/lib/quran-api";
+import { stripTajweed } from "@/lib/tajweed";
+import {
+  useProfile,
+  useReviewMutations,
+  useSetVerseStatus,
+  useVerses,
+  today,
+} from "@/hooks/use-hifz";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TajweedLegend, TajweedText } from "@/components/tajweed-text";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/ui-kit";
 
@@ -20,28 +38,56 @@ export const Route = createFileRoute("/_authenticated/sourates/$id")({
       { title: "Sourate — Hifz" },
       {
         name: "description",
-        content: "Lisez le texte arabe et marquez chaque verset comme appris ou à réviser.",
+        content:
+          "Lisez le texte arabe coloré selon les règles de tajwid et marquez chaque verset comme appris ou à réviser.",
       },
       { property: "og:title", content: "Sourate — Hifz" },
-      { property: "og:description", content: "Texte arabe et suivi verset par verset." },
+      {
+        property: "og:description",
+        content: "Texte arabe en couleurs de tajwid, mode phonétique et suivi verset par verset.",
+      },
     ],
   }),
   component: SurahDetail,
 });
+
+type ReadMode = "arabic" | "phonetic" | "both";
 
 function SurahDetail() {
   const { id } = useParams({ from: "/_authenticated/sourates/$id" });
   const number = Math.min(114, Math.max(1, Number(id) || 1));
   const surah = surahOf(number);
   const { data: verses = [] } = useVerses();
+  const { data: profile } = useProfile();
   const setStatus = useSetVerseStatus();
   const { create } = useReviewMutations();
 
+  const [mode, setMode] = useState<ReadMode | null>(null);
+  const [colored, setColored] = useState<boolean | null>(null);
+  const [showLegend, setShowLegend] = useState(true);
+
+  const readMode: ReadMode =
+    mode ?? (profile?.script_mode === "phonetic" ? "both" : "arabic");
+  const useColors = colored ?? profile?.show_tajweed !== false;
+
   const { data: ayahs, isLoading } = useQuery({
-    queryKey: ["surah-text", number],
-    queryFn: () => fetchSurahText(number),
+    queryKey: ["surah-tajweed", number],
+    queryFn: () => fetchSurahTajweed(number),
     staleTime: Infinity,
   });
+
+  const { data: translit } = useQuery({
+    queryKey: ["surah-translit", number],
+    queryFn: () => fetchSurahTranslit(number),
+    staleTime: Infinity,
+    enabled: readMode !== "arabic",
+  });
+
+  const translitOf = useMemo(() => {
+    const map = new Map<number, string>();
+    translit?.forEach((a) => map.set(a.numberInSurah, a.text));
+    return map;
+  }, [translit]);
 
   const statusOf = useMemo(() => {
     const map = new Map<number, string>();
@@ -98,7 +144,7 @@ function SurahDetail() {
         </div>
       </PageHeader>
 
-      <div className="surface mb-6 flex items-center gap-4 p-5">
+      <div className="surface mb-4 flex items-center gap-4 p-5">
         <span className="arabic text-2xl text-gold">{surah.arabic}</span>
         <div className="flex-1">
           <Progress value={percent} />
@@ -107,6 +153,39 @@ function SurahDetail() {
           </p>
         </div>
       </div>
+
+      <div className="surface mb-4 flex flex-wrap items-center justify-between gap-4 p-4">
+        <Tabs value={readMode} onValueChange={(value) => setMode(value as ReadMode)}>
+          <TabsList>
+            <TabsTrigger value="arabic">Arabe</TabsTrigger>
+            <TabsTrigger value="both">Arabe + phonétique</TabsTrigger>
+            <TabsTrigger value="phonetic">Phonétique</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <div className="flex items-center gap-4">
+          <label className="flex items-center gap-2 text-sm">
+            <Palette className="size-4 text-primary" />
+            Couleurs tajwid
+            <Switch checked={useColors} onCheckedChange={setColored} />
+          </label>
+          <Button variant="ghost" size="sm" onClick={() => setShowLegend((v) => !v)}>
+            {showLegend ? "Masquer la légende" : "Voir la légende"}
+          </Button>
+        </div>
+      </div>
+
+      {readMode !== "arabic" && (
+        <div className="surface mb-4 flex gap-3 border-gold/40 bg-gold-soft p-4">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-gold" />
+          <p className="text-xs">
+            La phonétique est <strong>déconseillée</strong> : elle déforme la prononciation et ne
+            porte aucune règle de tajwid. Garde-la comme aide temporaire et passe au mode arabe dès
+            que possible.
+          </p>
+        </div>
+      )}
+
+      {useColors && showLegend && <TajweedLegend className="mb-6" />}
 
       <div className="space-y-3">
         {isLoading &&
@@ -161,7 +240,24 @@ function SurahDetail() {
                   </Button>
                 </div>
               </div>
-              <p className="arabic text-right text-2xl leading-[2.2]">{ayah.text}</p>
+
+              {readMode !== "phonetic" && (
+                <TajweedText
+                  raw={ayah.text}
+                  colored={useColors}
+                  className="text-2xl leading-[2.2]"
+                />
+              )}
+              {readMode !== "arabic" && (
+                <p
+                  className={cn(
+                    "text-sm italic text-muted-foreground",
+                    readMode === "both" && "mt-3 border-t border-border pt-3",
+                  )}
+                >
+                  {translitOf.get(ayah.numberInSurah) ?? stripTajweed(ayah.text)}
+                </p>
+              )}
             </motion.article>
           );
         })}

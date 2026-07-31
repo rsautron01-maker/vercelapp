@@ -100,7 +100,12 @@ export type Database = {
           last_active_date: string | null
           level: number
           monthly_goal: number
+          onboarding_done: boolean
+          reads_arabic: string
+          script_mode: string
+          show_tajweed: boolean
           streak: number
+          tajweed_level: string
           updated_at: string
           weekly_goal: number
           xp: number
@@ -112,7 +117,12 @@ export type Database = {
           last_active_date?: string | null
           level?: number
           monthly_goal?: number
+          onboarding_done?: boolean
+          reads_arabic?: string
+          script_mode?: string
+          show_tajweed?: boolean
           streak?: number
+          tajweed_level?: string
           updated_at?: string
           weekly_goal?: number
           xp?: number
@@ -124,7 +134,12 @@ export type Database = {
           last_active_date?: string | null
           level?: number
           monthly_goal?: number
+          onboarding_done?: boolean
+          reads_arabic?: string
+          script_mode?: string
+          show_tajweed?: boolean
           streak?: number
+          tajweed_level?: string
           updated_at?: string
           weekly_goal?: number
           xp?: number
