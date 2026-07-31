@@ -5,10 +5,12 @@ import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { globalStats, useProfile, useVerses } from "@/hooks/use-hifz";
+import { globalStats, useProfile, useUpdateProfile, useVerses } from "@/hooks/use-hifz";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { TajweedLegend } from "@/components/tajweed-text";
 import { PageHeader } from "@/components/ui-kit";
 
 export const Route = createFileRoute("/_authenticated/profil")({
@@ -29,6 +31,7 @@ export const Route = createFileRoute("/_authenticated/profil")({
 function ProfilePage() {
   const { data: profile } = useProfile();
   const { data: verses = [] } = useVerses();
+  const updateProfile = useUpdateProfile();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [name, setName] = useState("");
