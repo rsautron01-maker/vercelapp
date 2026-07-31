@@ -129,7 +129,58 @@ function ProfilePage() {
         </div>
       </section>
 
+      <section className="surface mt-5 p-6">
+        <p className="font-display text-lg font-semibold">Lecture & tajwid</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Ces réglages définissent l'affichage par défaut des versets.
+        </p>
+
+        <div className="mt-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium">Couleurs de tajwid</p>
+              <p className="text-xs text-muted-foreground">
+                Chaque règle (madd, ghunnah, idghâm, qalqalah…) est colorée.
+              </p>
+            </div>
+            <Switch
+              checked={profile?.show_tajweed !== false}
+              onCheckedChange={(checked) => updateProfile.mutate({ show_tajweed: checked })}
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium">Mode d'affichage</p>
+              <p className="text-xs text-muted-foreground">
+                La phonétique est déconseillée : elle installe des erreurs de prononciation.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              {(
+                [
+                  ["arabic", "Arabe"],
+                  ["phonetic", "Phonétique"],
+                ] as const
+              ).map(([value, label]) => (
+                <Button
+                  key={value}
+                  size="sm"
+                  variant={profile?.script_mode === value ? "default" : "outline"}
+                  onClick={() => updateProfile.mutate({ script_mode: value })}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <TajweedLegend className="mt-5" />
+      </section>
+
       <Button variant="outline" className="mt-5" onClick={signOut}>
+
         <LogOut className="mr-1.5 size-4" /> Se déconnecter
       </Button>
     </div>
