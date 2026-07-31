@@ -82,10 +82,8 @@ export function OnboardingDialog() {
 
   return (
     <Dialog open={open}>
-      <DialogContent
-        showCloseButton={false}
-        className="max-h-[90vh] overflow-y-auto sm:max-w-2xl"
-      >
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl [&>button]:hidden">
+
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <p className="text-xs font-medium uppercase tracking-wide text-primary">
             Étape {step + 1} / 3
