@@ -137,7 +137,7 @@ export function OnboardingDialog() {
                 <Switch checked={showTajweed} onCheckedChange={setShowTajweed} />
               </div>
               <TajweedText raw={SAMPLE} colored={showTajweed} className="text-2xl" />
-              <TajweedLegend compact />
+              <TajweedLegend />
             </div>
           )}
 

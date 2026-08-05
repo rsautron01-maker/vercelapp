@@ -3,6 +3,10 @@
  *
  * Le format renvoyé par l'API est du type : `عَ[g[مّ]َ [h:14239[ٱ][l[لل]...`
  * soit `[code[texte]` où `code` est une lettre (éventuellement suivie de `:id`).
+ *
+ * Couleurs conservées (comme sur un mushaf coloré) :
+ * madd 6 · madd 4-5 · madd 2-4-6 · ghunnah · idghâm · tafkhîm · qalqalah.
+ * Toutes les autres annotations sont rendues en couleur du texte normal.
  */
 
 export type TajweedRule =
@@ -46,7 +50,7 @@ const CODE_TO_RULE: Record<string, TajweedRule> = {
   b: "idgham_mutaqaribayn",
 };
 
-/** Groupes de couleurs (identiques à la légende Mu'alim al-Qur'an). */
+/** Les 7 groupes de couleurs du mushaf coloré. */
 export type TajweedGroup =
   | "madd6"
   | "madd45"
@@ -55,30 +59,33 @@ export type TajweedGroup =
   | "idgham"
   | "tafkheem"
   | "qalqalah"
-  | "ikhfa"
-  | "iqlab"
-  | "silent"
   | "plain";
 
 const RULE_TO_GROUP: Record<TajweedRule, TajweedGroup> = {
-  madda_necessary: "madd6",
-  madda_obligatory: "madd45",
-  madda_permissible: "madd246",
-  madda_normal: "plain",
+  // Allongements
+  madda_necessary: "madd6", // المد اللازم — 6 harakât
+  madda_obligatory: "madd45", // المد الواجب المتصل — 4 à 5 harakât
+  madda_permissible: "madd246", // المد الجائز المنفصل — 2, 4 ou 6 harakât
+  madda_normal: "plain", // madd naturel : pas de couleur
+  // Nasalisation (ghunnah) : shaddah sur ن/م, idghâm bi-ghunnah, ikhfâ', iqlâb, ikhfâ' shafawî
   ghunnah: "ghunnah",
-  idgham_ghunnah: "idgham",
+  idgham_ghunnah: "ghunnah",
+  ikhafa: "ghunnah",
+  ikhafa_shafawi: "ghunnah",
+  idgham_shafawi: "ghunnah",
+  iqlab: "ghunnah",
+  // Idghâm sans nasalisation (ل ر) et idghâm des lettres proches/semblables
   idgham_wo_ghunnah: "idgham",
   idgham_mutajanisayn: "idgham",
   idgham_mutaqaribayn: "idgham",
-  idgham_shafawi: "idgham",
+  // Rebond
   qalaqah: "qalqalah",
-  ikhafa: "ikhfa",
-  ikhafa_shafawi: "ikhfa",
-  iqlab: "iqlab",
-  ham_wasl: "silent",
-  slnt: "silent",
-  laam_shamsiyah: "silent",
+  // Emphase
   tafkheem: "tafkheem",
+  // Non coloré
+  ham_wasl: "plain",
+  slnt: "plain",
+  laam_shamsiyah: "plain",
 };
 
 export const TAJWEED_LEGEND: {
@@ -86,70 +93,48 @@ export const TAJWEED_LEGEND: {
   label: string;
   arabic: string;
   hint: string;
-  extra?: boolean;
 }[] = [
   {
     group: "madd6",
-    label: "Al-Madd 6 Harakat",
+    label: "Al-Madd Lâzim — 6 harakât",
     arabic: "المد اللازم",
-    hint: "Allongement obligatoire de 6 temps.",
+    hint: "Lettre de madd (ا و ي) suivie d'une shaddah ou d'un soukoûn permanent. Ex. الضَّالِّينَ.",
   },
   {
     group: "madd45",
-    label: "Al-Madd 4-5 Harakat",
-    arabic: "المد الواجب",
-    hint: "Allongement de 4 à 5 temps.",
+    label: "Al-Madd Wâjib Muttasil — 4-5 harakât",
+    arabic: "المد الواجب المتصل",
+    hint: "Lettre de madd suivie d'un hamzah dans le même mot. Ex. جَاءَ, السَّمَاءِ, سُوءٌ.",
   },
   {
     group: "madd246",
-    label: "Al-Madd 2-4-6 Harakat",
-    arabic: "المد الجائز",
-    hint: "Allongement variable de 2, 4 ou 6 temps.",
+    label: "Al-Madd Jâ'iz Munfasil — 2/4/6 harakât",
+    arabic: "المد الجائز المنفصل",
+    hint: "Madd en fin de mot, mot suivant commençant par un hamzah. Ex. فِي أَنفُسِكُمْ.",
   },
   {
     group: "ghunnah",
-    label: "Ġunnah 2 Harakat",
+    label: "Ġunnah — 2 harakât",
     arabic: "الغنة",
-    hint: "Nasalisation tenue 2 temps sur مّ / نّ.",
+    hint: "نّ / مّ avec shaddah, idghâm bi-ghunnah (ينمو), ikhfâ' (15 lettres), iqlâb (نْ + ب), ikhfâ' shafawî (مْ + ب).",
   },
   {
     group: "idgham",
-    label: "'Idġâm",
-    arabic: "الإدغام",
-    hint: "Fusion de la lettre dans la suivante.",
+    label: "'Idġâm sans ġunnah",
+    arabic: "الإدغام بغير غنة",
+    hint: "نْ ou tanwîn suivi de ل ou ر : fusion sans nasalisation. Ex. مِنْ رَبِّهِمْ, مِنْ لَدُنْهُ.",
   },
   {
     group: "tafkheem",
-    label: "Tafkheem",
+    label: "Tafkhîm",
     arabic: "التفخيم",
-    hint: "Lettres emphatiques : خ ص ض ط ظ غ ق.",
+    hint: "Lettres emphatiques prononcées « grasses » : خ ص ض ط ظ غ ق.",
   },
   {
     group: "qalqalah",
     label: "Q̇alq̇alah",
     arabic: "القلقلة",
-    hint: "Rebond sur ق ط ب ج د avec soukoûn.",
-  },
-  {
-    group: "ikhfa",
-    label: "Ikhfâ'",
-    arabic: "الإخفاء",
-    hint: "Prononciation dissimulée avec nasalisation.",
-    extra: true,
-  },
-  {
-    group: "iqlab",
-    label: "Iqlâb",
-    arabic: "الإقلاب",
-    hint: "Le noûn devient un mîm devant ب.",
-    extra: true,
-  },
-  {
-    group: "silent",
-    label: "Lettre non prononcée",
-    arabic: "حرف لا يُنطق",
-    hint: "Hamzat al-waṣl, lettre muette, lâm solaire.",
-    extra: true,
+    hint: "Rebond sur قطب جد (ق ط ب ج د) en soukoûn. Mineure au milieu du mot, majeure à l'arrêt.",
   },
 ];
 
@@ -184,7 +169,7 @@ export function parseTajweed(raw: string, withTafkheem = true): TajweedSegment[]
   while ((match = TOKEN.exec(raw)) !== null) {
     pushPlain(raw.slice(lastIndex, match.index));
     const rule = CODE_TO_RULE[match[1]];
-    if (rule) {
+    if (rule && RULE_TO_GROUP[rule] !== "plain") {
       segments.push({ text: match[2], rule, group: RULE_TO_GROUP[rule] });
     } else {
       pushPlain(match[2]);

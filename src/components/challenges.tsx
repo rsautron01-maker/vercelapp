@@ -3,6 +3,8 @@ import { motion } from "motion/react";
 import { Check, RefreshCw, Timer, X } from "lucide-react";
 
 import { SURAHS, surahOf } from "@/data/quran";
+import { randomQuiz, shuffle, type QuizCategory } from "@/data/quiz";
+
 import {
   fetchSurahText,
   maskWords,
@@ -28,7 +30,12 @@ export type ChallengeMode =
   | "surah-name"
   | "juz-locate"
   | "chrono"
-  | "recite";
+  | "recite"
+  | "quiz-islam"
+  | "quiz-prophetes"
+  | "quiz-devinette"
+  | "quiz-tajweed";
+
 
 export const CHALLENGES: {
   mode: ChallengeMode;
@@ -107,18 +114,68 @@ export const CHALLENGES: {
     prompt: "Notez votre récitation",
     auto: false,
   },
+  {
+    mode: "quiz-islam",
+    title: "Quiz culture islamique",
+    description: "Questions à choix multiples sur l'islam et le Coran.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
+  {
+    mode: "quiz-prophetes",
+    title: "Quiz prophètes",
+    description: "Reconnaissez les prophètes et leurs histoires.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
+  {
+    mode: "quiz-devinette",
+    title: "Devinettes coraniques",
+    description: "« Qui suis-je ? » : devinez la sourate ou le verset.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
+  {
+    mode: "quiz-tajweed",
+    title: "Quiz tajwid",
+    description: "Ghunnah, qalqalah, madd, idghâm : testez vos règles.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
 ];
 
+const QUIZ_MODES: Record<string, QuizCategory> = {
+  "quiz-islam": "islam",
+  "quiz-prophetes": "prophetes",
+  "quiz-devinette": "devinette",
+  "quiz-tajweed": "tajweed",
+};
+
 type Question = {
-  verse: VerseRef;
+  verse?: VerseRef;
   question: string;
   arabic?: string;
   answer: string;
+  options?: string[];
+  explanation?: string;
   check?: (input: string) => boolean;
 };
 
 async function buildQuestion(mode: ChallengeMode): Promise<Question> {
+  const category = QUIZ_MODES[mode];
+  if (category) {
+    const item = randomQuiz(category);
+    return {
+      question: item.question,
+      answer: item.answer,
+      options: shuffle(item.options),
+      explanation: item.explanation,
+      check: (input) => input === item.answer,
+    };
+  }
+
   const verse = await randomVerse();
+
   const surah = verse.surah;
 
   if (mode === "guess-surah" || mode === "chrono") {
@@ -126,7 +183,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
       verse,
       question: "De quelle sourate provient ce verset ?",
       arabic: verse.text,
-      answer: `${surah.number}. ${surah.french} (${surah.translit})`,
+      answer: `${surah.number}. ${surah.translit}`,
       check: (input) => matchesSurahName(input, surah),
     };
   }
@@ -134,7 +191,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
   if (mode === "verse-number") {
     return {
       verse,
-      question: `Quel est le numéro de ce verset dans ${surah.french} ?`,
+      question: `Quel est le numéro de ce verset dans ${surah.translit} ?`,
       arabic: verse.text,
       answer: String(verse.ayah),
       check: (input) => Number(input) === verse.ayah,
@@ -145,7 +202,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
     const { masked, answer } = maskWords(verse.text);
     return {
       verse,
-      question: `Complétez ce verset de ${surah.french} (v.${verse.ayah})`,
+      question: `Complétez ce verset de ${surah.translit} (v.${verse.ayah})`,
       arabic: masked,
       answer: answer.join(" · "),
     };
@@ -154,7 +211,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
   if (mode === "first-word") {
     return {
       verse,
-      question: `${surah.french} v.${verse.ayah} — poursuivez à partir du premier mot`,
+      question: `${surah.translit} v.${verse.ayah} — poursuivez à partir du premier mot`,
       arabic: verse.text.split(" ")[0] + " …",
       answer: verse.text,
     };
@@ -164,7 +221,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
     const ayahs = await fetchSurahText(surah.number);
     return {
       verse,
-      question: `Récitez le premier verset de ${surah.french} (${surah.translit})`,
+      question: `Récitez le premier verset de ${surah.translit} (${surah.translit})`,
       answer: ayahs[0].text,
     };
   }
@@ -173,7 +230,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
     const { juzOfVerse } = await import("@/hooks/use-hifz");
     return {
       verse,
-      question: `Dans quel juzz se trouve ${surah.french} v.${verse.ayah} ?`,
+      question: `Dans quel juzz se trouve ${surah.translit} v.${verse.ayah} ?`,
       arabic: verse.text,
       answer: `Juzz ${juzOfVerse(surah.number, verse.ayah)}`,
     };
@@ -187,7 +244,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
       .sort(() => Math.random() - 0.5);
     return {
       verse,
-      question: `Remettez ces versets de ${surah.french} dans l'ordre`,
+      question: `Remettez ces versets de ${surah.translit} dans l'ordre`,
       arabic: shuffled.map((item, i) => `${i + 1}. ${item.text}`).join("\n"),
       answer: shuffled
         .map((item, i) => ({ ...item, position: i + 1 }))
@@ -201,7 +258,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
     const { next } = await versesAround(surah.number, verse.ayah, 3, 0);
     return {
       verse,
-      question: `Récitez ${surah.french} à partir du verset ${verse.ayah}`,
+      question: `Récitez ${surah.translit} à partir du verset ${verse.ayah}`,
       answer: [verse.text, ...next.map((a) => a.text)].join(" ﴿﴾ "),
     };
   }
@@ -209,7 +266,7 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
   const { next } = await versesAround(surah.number, verse.ayah, 1, 0);
   return {
     verse,
-    question: `Quel verset suit ${surah.french} v.${verse.ayah} ?`,
+    question: `Quel verset suit ${surah.translit} v.${verse.ayah} ?`,
     arabic: verse.text,
     answer: next[0]?.text ?? "Fin de la sourate",
     check: (input) => normalize(input) === normalize(next[0]?.text ?? ""),
@@ -368,15 +425,52 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
             </p>
           )}
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && submit()}
-              placeholder={config.prompt}
-            />
-            <Button onClick={submit}>{config.auto ? "Valider" : "Voir la réponse"}</Button>
-          </div>
+          {question.options ? (
+            <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+              {question.options.map((option) => {
+                const chosen = input === option;
+                const isRight = option === question.answer;
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    disabled={revealed}
+                    onClick={() => {
+                      setInput(option);
+                      setRevealed(true);
+                      const success = option === question.answer;
+                      setScore((value) => value + (success ? 1 : 0));
+                      setTotal((value) => value + 1);
+                      save.mutate({
+                        mode,
+                        score: success ? 1 : 0,
+                        total: 1,
+                        success,
+                        xp: success ? 10 : 2,
+                      });
+                    }}
+                    className={cn(
+                      "rounded-xl border border-border bg-card p-3.5 text-left text-sm transition-colors hover:bg-muted disabled:cursor-default",
+                      revealed && isRight && "border-primary bg-primary-soft font-medium text-primary",
+                      revealed && chosen && !isRight && "border-destructive bg-destructive/10",
+                    )}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && submit()}
+                placeholder={config.prompt}
+              />
+              <Button onClick={submit}>{config.auto ? "Valider" : "Voir la réponse"}</Button>
+            </div>
+          )}
 
           {revealed && (
             <motion.div
@@ -387,13 +481,27 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Réponse
               </p>
-              <p className="arabic mt-2 rounded-2xl bg-primary-soft p-4 text-right text-xl leading-[2]">
-                {question.answer}
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                {question.verse.surah.number}. {surahOf(question.verse.surah.number).french} · verset{" "}
-                {question.verse.ayah}
-              </p>
+              {question.options ? (
+                <p className="mt-2 rounded-2xl bg-primary-soft p-4 text-sm font-medium">
+                  {question.answer}
+                  {question.explanation && (
+                    <span className="mt-1 block font-normal text-muted-foreground">
+                      {question.explanation}
+                    </span>
+                  )}
+                </p>
+              ) : (
+                <p className="arabic mt-2 rounded-2xl bg-primary-soft p-4 text-right text-xl leading-[2]">
+                  {question.answer}
+                </p>
+              )}
+              {question.verse && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {question.verse.surah.number}. {surahOf(question.verse.surah.number).translit} ·
+                  verset {question.verse.ayah}
+                </p>
+              )}
+
               {!config.auto && (
                 <div className="mt-4 flex gap-2">
                   <Button size="sm" onClick={() => grade(true)}>

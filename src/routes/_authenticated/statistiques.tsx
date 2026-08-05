@@ -68,7 +68,7 @@ function StatsPage() {
       SURAHS.map((surah) => {
         const entry = stats.stats.get(surah.number)!;
         return {
-          name: surah.french,
+          name: surah.translit,
           versets: entry.learned + entry.review,
         };
       })

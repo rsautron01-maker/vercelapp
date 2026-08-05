@@ -149,7 +149,7 @@ function Dashboard() {
           {currentSurah && (
             <Button asChild variant="outline" size="sm">
               <Link to="/sourates/$id" params={{ id: String(currentSurah.number) }}>
-                Continuer : {currentSurah.french} · v.{nextAyah}
+                Continuer : {currentSurah.translit} · v.{nextAyah}
               </Link>
             </Button>
           )}

@@ -105,11 +105,12 @@ function SurahList() {
                       {surah.number}
                     </span>
                     <div>
-                      <p className="font-medium leading-tight">{surah.french}</p>
+                      <p className="font-medium leading-tight">{surah.translit}</p>
                       <p className="text-xs text-muted-foreground">
-                        {surah.translit} · {surah.ayahs} versets ·{" "}
+                        {surah.french} · {surah.ayahs} versets ·{" "}
                         {surah.revelation === "Meccan" ? "Mecquoise" : "Médinoise"}
                       </p>
+
                     </div>
                   </div>
                   <span className="arabic text-lg text-gold">{surah.arabic}</span>
