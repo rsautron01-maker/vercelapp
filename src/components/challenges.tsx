@@ -28,7 +28,12 @@ export type ChallengeMode =
   | "surah-name"
   | "juz-locate"
   | "chrono"
-  | "recite";
+  | "recite"
+  | "quiz-islam"
+  | "quiz-prophetes"
+  | "quiz-devinette"
+  | "quiz-tajweed";
+
 
 export const CHALLENGES: {
   mode: ChallengeMode;
