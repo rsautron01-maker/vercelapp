@@ -112,18 +112,68 @@ export const CHALLENGES: {
     prompt: "Notez votre récitation",
     auto: false,
   },
+  {
+    mode: "quiz-islam",
+    title: "Quiz culture islamique",
+    description: "Questions à choix multiples sur l'islam et le Coran.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
+  {
+    mode: "quiz-prophetes",
+    title: "Quiz prophètes",
+    description: "Reconnaissez les prophètes et leurs histoires.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
+  {
+    mode: "quiz-devinette",
+    title: "Devinettes coraniques",
+    description: "« Qui suis-je ? » : devinez la sourate ou le verset.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
+  {
+    mode: "quiz-tajweed",
+    title: "Quiz tajwid",
+    description: "Ghunnah, qalqalah, madd, idghâm : testez vos règles.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+  },
 ];
 
+const QUIZ_MODES: Record<string, QuizCategory> = {
+  "quiz-islam": "islam",
+  "quiz-prophetes": "prophetes",
+  "quiz-devinette": "devinette",
+  "quiz-tajweed": "tajweed",
+};
+
 type Question = {
-  verse: VerseRef;
+  verse?: VerseRef;
   question: string;
   arabic?: string;
   answer: string;
+  options?: string[];
+  explanation?: string;
   check?: (input: string) => boolean;
 };
 
 async function buildQuestion(mode: ChallengeMode): Promise<Question> {
+  const category = QUIZ_MODES[mode];
+  if (category) {
+    const item = randomQuiz(category);
+    return {
+      question: item.question,
+      answer: item.answer,
+      options: shuffle(item.options),
+      explanation: item.explanation,
+      check: (input) => input === item.answer,
+    };
+  }
+
   const verse = await randomVerse();
+
   const surah = verse.surah;
 
   if (mode === "guess-surah" || mode === "chrono") {
