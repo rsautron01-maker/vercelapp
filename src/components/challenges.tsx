@@ -3,6 +3,8 @@ import { motion } from "motion/react";
 import { Check, RefreshCw, Timer, X } from "lucide-react";
 
 import { SURAHS, surahOf } from "@/data/quran";
+import { randomQuiz, shuffle, type QuizCategory } from "@/data/quiz";
+
 import {
   fetchSurahText,
   maskWords,
