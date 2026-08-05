@@ -129,10 +129,11 @@ function SurahDetail() {
       </Button>
 
       <PageHeader
-        title={`${surah.number}. ${surah.french}`}
-        description={`${surah.translit} · ${surah.ayahs} versets · ${
+        title={`${surah.number}. ${surah.translit}`}
+        description={`${surah.french} · ${surah.ayahs} versets · ${
           surah.revelation === "Meccan" ? "Mecquoise" : "Médinoise"
         }`}
+
       >
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={planReview}>
