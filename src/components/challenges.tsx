@@ -423,15 +423,52 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
             </p>
           )}
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && submit()}
-              placeholder={config.prompt}
-            />
-            <Button onClick={submit}>{config.auto ? "Valider" : "Voir la réponse"}</Button>
-          </div>
+          {question.options ? (
+            <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+              {question.options.map((option) => {
+                const chosen = input === option;
+                const isRight = option === question.answer;
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    disabled={revealed}
+                    onClick={() => {
+                      setInput(option);
+                      setRevealed(true);
+                      const success = option === question.answer;
+                      setScore((value) => value + (success ? 1 : 0));
+                      setTotal((value) => value + 1);
+                      save.mutate({
+                        mode,
+                        score: success ? 1 : 0,
+                        total: 1,
+                        success,
+                        xp: success ? 10 : 2,
+                      });
+                    }}
+                    className={cn(
+                      "rounded-xl border border-border bg-card p-3.5 text-left text-sm transition-colors hover:bg-muted disabled:cursor-default",
+                      revealed && isRight && "border-primary bg-primary-soft font-medium text-primary",
+                      revealed && chosen && !isRight && "border-destructive bg-destructive/10",
+                    )}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && submit()}
+                placeholder={config.prompt}
+              />
+              <Button onClick={submit}>{config.auto ? "Valider" : "Voir la réponse"}</Button>
+            </div>
+          )}
 
           {revealed && (
             <motion.div
@@ -442,13 +479,27 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Réponse
               </p>
-              <p className="arabic mt-2 rounded-2xl bg-primary-soft p-4 text-right text-xl leading-[2]">
-                {question.answer}
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                {question.verse.surah.number}. {surahOf(question.verse.surah.number).french} · verset{" "}
-                {question.verse.ayah}
-              </p>
+              {question.options ? (
+                <p className="mt-2 rounded-2xl bg-primary-soft p-4 text-sm font-medium">
+                  {question.answer}
+                  {question.explanation && (
+                    <span className="mt-1 block font-normal text-muted-foreground">
+                      {question.explanation}
+                    </span>
+                  )}
+                </p>
+              ) : (
+                <p className="arabic mt-2 rounded-2xl bg-primary-soft p-4 text-right text-xl leading-[2]">
+                  {question.answer}
+                </p>
+              )}
+              {question.verse && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {question.verse.surah.number}. {surahOf(question.verse.surah.number).translit} ·
+                  verset {question.verse.ayah}
+                </p>
+              )}
+
               {!config.auto && (
                 <div className="mt-4 flex gap-2">
                   <Button size="sm" onClick={() => grade(true)}>
