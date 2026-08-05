@@ -41,8 +41,10 @@ export function GlobalSearch() {
                 className="flex items-center justify-between px-3 py-2 text-sm hover:bg-muted"
               >
                 <span>
-                  <span className="text-muted-foreground">{surah.number}.</span> {surah.french}
+                  <span className="text-muted-foreground">{surah.number}.</span> {surah.translit}{" "}
+                  <span className="text-xs text-muted-foreground">{surah.french}</span>
                 </span>
+
                 <span className="arabic text-base">{surah.arabic}</span>
               </Link>
             </li>
