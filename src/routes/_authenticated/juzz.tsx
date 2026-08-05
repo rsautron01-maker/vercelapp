@@ -61,8 +61,8 @@ function JuzPage() {
                 <div>
                   <h2 className="font-display text-lg font-semibold">Juzz {juz.number}</h2>
                   <p className="text-xs text-muted-foreground">
-                    {surahOf(range.start.surah).french} {range.start.ayah} →{" "}
-                    {surahOf(range.end.surah).french} {range.end.ayah}
+                    {surahOf(range.start.surah).translit} {range.start.ayah} →{" "}
+                    {surahOf(range.end.surah).translit} {range.end.ayah}
                   </p>
                 </div>
                 <Button asChild size="sm" variant="ghost">

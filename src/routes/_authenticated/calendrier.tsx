@@ -152,7 +152,7 @@ function CalendarPage() {
               <SelectContent className="max-h-72">
                 {SURAHS.map((item) => (
                   <SelectItem key={item.number} value={String(item.number)}>
-                    {item.number}. {item.french}
+                    {item.number}. {item.translit}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -163,7 +163,7 @@ function CalendarPage() {
               onClick={() =>
                 create.mutate(
                   {
-                    label: `Réviser ${SURAHS[Number(surah) - 1].french}`,
+                    label: `Réviser ${SURAHS[Number(surah) - 1].translit}`,
                     target_type: "surah",
                     surah: Number(surah),
                     due_date: date,

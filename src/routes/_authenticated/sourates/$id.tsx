@@ -103,7 +103,7 @@ function SurahDetail() {
     due.setDate(due.getDate() + 1);
     create.mutate(
       {
-        label: `Réviser ${surah.french}`,
+        label: `Réviser ${surah.translit}`,
         target_type: "surah",
         surah: number,
         due_date: due.toISOString().slice(0, 10),
@@ -267,7 +267,7 @@ function SurahDetail() {
         {number > 1 ? (
           <Button asChild variant="outline">
             <Link to="/sourates/$id" params={{ id: String(number - 1) }}>
-              <ArrowLeft className="mr-1.5 size-4" /> {SURAHS[number - 2].french}
+              <ArrowLeft className="mr-1.5 size-4" /> {SURAHS[number - 2].translit}
             </Link>
           </Button>
         ) : (
@@ -276,7 +276,7 @@ function SurahDetail() {
         {number < 114 && (
           <Button asChild variant="outline">
             <Link to="/sourates/$id" params={{ id: String(number + 1) }}>
-              {SURAHS[number].french} <ArrowRight className="ml-1.5 size-4" />
+              {SURAHS[number].translit} <ArrowRight className="ml-1.5 size-4" />
             </Link>
           </Button>
         )}
