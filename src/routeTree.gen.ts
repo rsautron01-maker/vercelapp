@@ -16,6 +16,7 @@ import { Route as AuthenticatedCalendrierRouteImport } from './routes/_authentic
 import { Route as AuthenticatedDefisRouteImport } from './routes/_authenticated/defis'
 import { Route as AuthenticatedHadithRouteImport } from './routes/_authenticated/hadith'
 import { Route as AuthenticatedJuzzRouteImport } from './routes/_authenticated/juzz'
+import { Route as AuthenticatedMethodeRouteImport } from './routes/_authenticated/methode'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedStatistiquesRouteImport } from './routes/_authenticated/statistiques'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
@@ -55,6 +56,11 @@ const AuthenticatedHadithRoute = AuthenticatedHadithRouteImport.update({
 const AuthenticatedJuzzRoute = AuthenticatedJuzzRouteImport.update({
   id: '/juzz',
   path: '/juzz',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMethodeRoute = AuthenticatedMethodeRouteImport.update({
+  id: '/methode',
+  path: '/methode',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/defis': typeof AuthenticatedDefisRoute
   '/hadith': typeof AuthenticatedHadithRoute
   '/juzz': typeof AuthenticatedJuzzRoute
+  '/methode': typeof AuthenticatedMethodeRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/defis': typeof AuthenticatedDefisRoute
   '/hadith': typeof AuthenticatedHadithRoute
   '/juzz': typeof AuthenticatedJuzzRoute
+  '/methode': typeof AuthenticatedMethodeRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/_authenticated/defis': typeof AuthenticatedDefisRoute
   '/_authenticated/hadith': typeof AuthenticatedHadithRoute
   '/_authenticated/juzz': typeof AuthenticatedJuzzRoute
+  '/_authenticated/methode': typeof AuthenticatedMethodeRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/statistiques': typeof AuthenticatedStatistiquesRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/defis'
     | '/hadith'
     | '/juzz'
+    | '/methode'
     | '/profil'
     | '/statistiques'
     | '/tableau-de-bord'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/defis'
     | '/hadith'
     | '/juzz'
+    | '/methode'
     | '/profil'
     | '/statistiques'
     | '/tableau-de-bord'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/_authenticated/defis'
     | '/_authenticated/hadith'
     | '/_authenticated/juzz'
+    | '/_authenticated/methode'
     | '/_authenticated/profil'
     | '/_authenticated/statistiques'
     | '/_authenticated/tableau-de-bord'
@@ -238,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedJuzzRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/methode': {
+      id: '/_authenticated/methode'
+      path: '/methode'
+      fullPath: '/methode'
+      preLoaderRoute: typeof AuthenticatedMethodeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profil': {
       id: '/_authenticated/profil'
       path: '/profil'
@@ -288,6 +307,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDefisRoute: typeof AuthenticatedDefisRoute
   AuthenticatedHadithRoute: typeof AuthenticatedHadithRoute
   AuthenticatedJuzzRoute: typeof AuthenticatedJuzzRoute
+  AuthenticatedMethodeRoute: typeof AuthenticatedMethodeRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedStatistiquesRoute: typeof AuthenticatedStatistiquesRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
@@ -301,6 +321,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDefisRoute: AuthenticatedDefisRoute,
   AuthenticatedHadithRoute: AuthenticatedHadithRoute,
   AuthenticatedJuzzRoute: AuthenticatedJuzzRoute,
+  AuthenticatedMethodeRoute: AuthenticatedMethodeRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedStatistiquesRoute: AuthenticatedStatistiquesRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,

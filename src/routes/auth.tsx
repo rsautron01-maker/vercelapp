@@ -61,8 +61,11 @@ function AuthPage() {
       return;
     }
     if (!data.session) {
-      toast.success("Vérifiez votre boîte mail pour confirmer votre inscription.");
-      return;
+      const retry = await supabase.auth.signInWithPassword({ email, password });
+      if (retry.error) {
+        toast.error(retry.error.message);
+        return;
+      }
     }
     navigate({ to: "/tableau-de-bord" });
   }

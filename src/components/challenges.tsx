@@ -47,9 +47,9 @@ export const CHALLENGES: {
   {
     mode: "next-verse",
     title: "Trouver la suite",
-    description: "Un verset s'affiche, récitez ou écrivez le suivant.",
-    prompt: "Écrivez le verset suivant (ou récitez, puis vérifiez)",
-    auto: false,
+    description: "Un verset s'affiche en arabe : choisissez le verset qui suit.",
+    prompt: "Choisissez le verset suivant",
+    auto: true,
   },
   {
     mode: "guess-surah",
@@ -157,6 +157,7 @@ type Question = {
   arabic?: string;
   answer: string;
   options?: string[];
+  arabicOptions?: boolean;
   explanation?: string;
   check?: (input: string) => boolean;
 };
@@ -263,13 +264,24 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
     };
   }
 
+  // « Trouver la suite » : QCM en arabe (le bon verset + 3 leurres du même Coran).
   const { next } = await versesAround(surah.number, verse.ayah, 1, 0);
+  const correct = next[0]?.text ?? "";
+  const decoys: string[] = [];
+  while (decoys.length < 3) {
+    const other = await randomVerse();
+    if (normalize(other.text) === normalize(correct) || normalize(other.text) === normalize(verse.text)) continue;
+    if (decoys.some((d) => normalize(d) === normalize(other.text))) continue;
+    decoys.push(other.text);
+  }
   return {
     verse,
     question: `Quel verset suit ${surah.translit} v.${verse.ayah} ?`,
     arabic: verse.text,
-    answer: next[0]?.text ?? "Fin de la sourate",
-    check: (input) => normalize(input) === normalize(next[0]?.text ?? ""),
+    answer: correct,
+    options: shuffle([correct, ...decoys]),
+    arabicOptions: true,
+    check: (input) => normalize(input) === normalize(correct),
   };
 }
 
@@ -451,6 +463,7 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
                     }}
                     className={cn(
                       "rounded-xl border border-border bg-card p-3.5 text-left text-sm transition-colors hover:bg-muted disabled:cursor-default",
+                      question.arabicOptions && "arabic text-right text-xl leading-[2]",
                       revealed && isRight && "border-primary bg-primary-soft font-medium text-primary",
                       revealed && chosen && !isRight && "border-destructive bg-destructive/10",
                     )}
@@ -482,7 +495,7 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
                 Réponse
               </p>
               {question.options ? (
-                <p className="mt-2 rounded-2xl bg-primary-soft p-4 text-sm font-medium">
+                <p className={cn("mt-2 rounded-2xl bg-primary-soft p-4 text-sm font-medium", question.arabicOptions && "arabic text-right text-xl leading-[2]")}>
                   {question.answer}
                   {question.explanation && (
                     <span className="mt-1 block font-normal text-muted-foreground">
