@@ -6,7 +6,7 @@ import { useProfile, useUpdateProfile } from "@/hooks/use-hifz";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
-import { TajweedLegend, TajweedText } from "@/components/tajweed-text";
+import { TajweedText } from "@/components/tajweed-text";
 import { cn } from "@/lib/utils";
 
 const SAMPLE = "قُلْ هُوَ [h:8078[ٱ]للَّهُ أَحَ[q[د]ٌ";
@@ -129,17 +129,17 @@ export function OnboardingDialog() {
               </div>
               <div className="surface flex items-center justify-between gap-4 p-4">
                 <div>
-                  <p className="text-sm font-semibold">Couleurs de tajwid</p>
+                  <p className="text-sm font-semibold">Rappels de tajwid</p>
                   <p className="text-xs text-muted-foreground">
-                    Chaque règle est colorée directement dans le texte.
+                    Affiche des rappels de règles pendant la lecture (page Tajwid dédiée).
                   </p>
                 </div>
                 <Switch checked={showTajweed} onCheckedChange={setShowTajweed} />
               </div>
-              <TajweedText raw={SAMPLE} colored={showTajweed} className="text-2xl" />
-              <TajweedLegend />
+              <TajweedText raw={SAMPLE} className="text-2xl" />
             </div>
           )}
+
 
           {step === 2 && (
             <div className="mt-3 space-y-4">

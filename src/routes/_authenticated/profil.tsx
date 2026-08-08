@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { TajweedLegend } from "@/components/tajweed-text";
+
 import { PageHeader } from "@/components/ui-kit";
 
 export const Route = createFileRoute("/_authenticated/profil")({
