@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PageHeader, ProgressRing, StatCard } from "@/components/ui-kit";
+import { DailyHadith } from "@/components/daily-hadith";
 
 export const Route = createFileRoute("/_authenticated/tableau-de-bord")({
   head: () => ({
