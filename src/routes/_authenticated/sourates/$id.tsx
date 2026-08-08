@@ -6,9 +6,9 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   CalendarPlus,
   Check,
-  Palette,
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -63,12 +63,9 @@ function SurahDetail() {
   const { create } = useReviewMutations();
 
   const [mode, setMode] = useState<ReadMode | null>(null);
-  const [colored, setColored] = useState<boolean | null>(null);
-  const [showLegend, setShowLegend] = useState(true);
 
   const readMode: ReadMode =
     mode ?? (profile?.script_mode === "phonetic" ? "both" : "arabic");
-  const useColors = colored ?? profile?.show_tajweed !== false;
 
   const { data: ayahs, isLoading } = useQuery({
     queryKey: ["surah-tajweed", number],
@@ -237,11 +234,7 @@ function SurahDetail() {
               </div>
 
               {readMode !== "phonetic" && (
-                <TajweedText
-                  raw={ayah.text}
-                  colored={useColors}
-                  className="text-2xl leading-[2.2]"
-                />
+                <TajweedText raw={ayah.text} className="text-2xl leading-[2.2]" />
               )}
               {readMode !== "arabic" && (
                 <p
