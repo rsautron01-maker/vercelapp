@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PageHeader, ProgressRing, StatCard } from "@/components/ui-kit";
+import { DailyHadith } from "@/components/daily-hadith";
 
 export const Route = createFileRoute("/_authenticated/tableau-de-bord")({
   head: () => ({
@@ -292,6 +293,25 @@ function Dashboard() {
           </Button>
         </section>
       </div>
+
+      <div className="mt-5 grid gap-5 lg:grid-cols-3">
+        <DailyHadith className="lg:col-span-2" />
+        <section className="surface p-6">
+          <p className="font-display text-lg font-semibold">Aller plus loin</p>
+          <div className="mt-4 space-y-2">
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link to="/methode">Méthode d'apprentissage en 5 étapes</Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link to="/tajwid">Règles de tajwid expliquées</Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full justify-start">
+              <Link to="/defis">Défis & quiz islamiques</Link>
+            </Button>
+          </div>
+        </section>
+      </div>
     </div>
+
   );
 }

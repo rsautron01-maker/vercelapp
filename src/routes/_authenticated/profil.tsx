@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { TajweedLegend } from "@/components/tajweed-text";
+
 import { PageHeader } from "@/components/ui-kit";
 
 export const Route = createFileRoute("/_authenticated/profil")({
@@ -141,9 +141,9 @@ function ProfilePage() {
         <div className="mt-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-medium">Couleurs de tajwid</p>
+              <p className="text-sm font-medium">Rappels de tajwid</p>
               <p className="text-xs text-muted-foreground">
-                Chaque règle (madd, ghunnah, idghâm, qalqalah…) est colorée.
+                Affiche des rappels de règles pendant la lecture.
               </p>
             </div>
             <Switch
@@ -179,7 +179,10 @@ function ProfilePage() {
           </div>
         </div>
 
-        <TajweedLegend className="mt-5" />
+        <Button asChild variant="outline" size="sm" className="mt-5">
+          <Link to="/tajwid">Voir le cours de tajwid</Link>
+        </Button>
+
       </section>
 
       <Button variant="outline" className="mt-5" onClick={signOut}>

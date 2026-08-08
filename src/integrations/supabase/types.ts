@@ -92,6 +92,48 @@ export type Database = {
         }
         Relationships: []
       }
+      method_plans: {
+        Row: {
+          active: boolean
+          ayah_from: number | null
+          ayah_to: number | null
+          created_at: string
+          id: string
+          label: string
+          last_step_date: string | null
+          start_date: string
+          step: number
+          surah: number | null
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          ayah_from?: number | null
+          ayah_to?: number | null
+          created_at?: string
+          id?: string
+          label: string
+          last_step_date?: string | null
+          start_date?: string
+          step?: number
+          surah?: number | null
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          ayah_from?: number | null
+          ayah_to?: number | null
+          created_at?: string
+          id?: string
+          label?: string
+          last_step_date?: string | null
+          start_date?: string
+          step?: number
+          surah?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

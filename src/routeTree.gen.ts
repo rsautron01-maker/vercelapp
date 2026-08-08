@@ -14,10 +14,13 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedCalendrierRouteImport } from './routes/_authenticated/calendrier'
 import { Route as AuthenticatedDefisRouteImport } from './routes/_authenticated/defis'
+import { Route as AuthenticatedHadithRouteImport } from './routes/_authenticated/hadith'
 import { Route as AuthenticatedJuzzRouteImport } from './routes/_authenticated/juzz'
+import { Route as AuthenticatedMethodeRouteImport } from './routes/_authenticated/methode'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedStatistiquesRouteImport } from './routes/_authenticated/statistiques'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
+import { Route as AuthenticatedTajwidRouteImport } from './routes/_authenticated/tajwid'
 import { Route as AuthenticatedSouratesIndexRouteImport } from './routes/_authenticated/sourates/index'
 import { Route as AuthenticatedSouratesIdRouteImport } from './routes/_authenticated/sourates/$id'
 
@@ -45,9 +48,19 @@ const AuthenticatedDefisRoute = AuthenticatedDefisRouteImport.update({
   path: '/defis',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHadithRoute = AuthenticatedHadithRouteImport.update({
+  id: '/hadith',
+  path: '/hadith',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedJuzzRoute = AuthenticatedJuzzRouteImport.update({
   id: '/juzz',
   path: '/juzz',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMethodeRoute = AuthenticatedMethodeRouteImport.update({
+  id: '/methode',
+  path: '/methode',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
@@ -67,6 +80,11 @@ const AuthenticatedTableauDeBordRoute =
     path: '/tableau-de-bord',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTajwidRoute = AuthenticatedTajwidRouteImport.update({
+  id: '/tajwid',
+  path: '/tajwid',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSouratesIndexRoute =
   AuthenticatedSouratesIndexRouteImport.update({
     id: '/sourates/',
@@ -84,10 +102,13 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/calendrier': typeof AuthenticatedCalendrierRoute
   '/defis': typeof AuthenticatedDefisRoute
+  '/hadith': typeof AuthenticatedHadithRoute
   '/juzz': typeof AuthenticatedJuzzRoute
+  '/methode': typeof AuthenticatedMethodeRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/tajwid': typeof AuthenticatedTajwidRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
@@ -96,10 +117,13 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/calendrier': typeof AuthenticatedCalendrierRoute
   '/defis': typeof AuthenticatedDefisRoute
+  '/hadith': typeof AuthenticatedHadithRoute
   '/juzz': typeof AuthenticatedJuzzRoute
+  '/methode': typeof AuthenticatedMethodeRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/tajwid': typeof AuthenticatedTajwidRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates': typeof AuthenticatedSouratesIndexRoute
 }
@@ -110,10 +134,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/calendrier': typeof AuthenticatedCalendrierRoute
   '/_authenticated/defis': typeof AuthenticatedDefisRoute
+  '/_authenticated/hadith': typeof AuthenticatedHadithRoute
   '/_authenticated/juzz': typeof AuthenticatedJuzzRoute
+  '/_authenticated/methode': typeof AuthenticatedMethodeRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/statistiques': typeof AuthenticatedStatistiquesRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
+  '/_authenticated/tajwid': typeof AuthenticatedTajwidRoute
   '/_authenticated/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/_authenticated/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
@@ -124,10 +151,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendrier'
     | '/defis'
+    | '/hadith'
     | '/juzz'
+    | '/methode'
     | '/profil'
     | '/statistiques'
     | '/tableau-de-bord'
+    | '/tajwid'
     | '/sourates/$id'
     | '/sourates/'
   fileRoutesByTo: FileRoutesByTo
@@ -136,10 +166,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/calendrier'
     | '/defis'
+    | '/hadith'
     | '/juzz'
+    | '/methode'
     | '/profil'
     | '/statistiques'
     | '/tableau-de-bord'
+    | '/tajwid'
     | '/sourates/$id'
     | '/sourates'
   id:
@@ -149,10 +182,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/calendrier'
     | '/_authenticated/defis'
+    | '/_authenticated/hadith'
     | '/_authenticated/juzz'
+    | '/_authenticated/methode'
     | '/_authenticated/profil'
     | '/_authenticated/statistiques'
     | '/_authenticated/tableau-de-bord'
+    | '/_authenticated/tajwid'
     | '/_authenticated/sourates/$id'
     | '/_authenticated/sourates/'
   fileRoutesById: FileRoutesById
@@ -200,11 +236,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDefisRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/hadith': {
+      id: '/_authenticated/hadith'
+      path: '/hadith'
+      fullPath: '/hadith'
+      preLoaderRoute: typeof AuthenticatedHadithRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/juzz': {
       id: '/_authenticated/juzz'
       path: '/juzz'
       fullPath: '/juzz'
       preLoaderRoute: typeof AuthenticatedJuzzRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/methode': {
+      id: '/_authenticated/methode'
+      path: '/methode'
+      fullPath: '/methode'
+      preLoaderRoute: typeof AuthenticatedMethodeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/profil': {
@@ -228,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTableauDeBordRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tajwid': {
+      id: '/_authenticated/tajwid'
+      path: '/tajwid'
+      fullPath: '/tajwid'
+      preLoaderRoute: typeof AuthenticatedTajwidRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/sourates/': {
       id: '/_authenticated/sourates/'
       path: '/sourates'
@@ -248,10 +305,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedCalendrierRoute: typeof AuthenticatedCalendrierRoute
   AuthenticatedDefisRoute: typeof AuthenticatedDefisRoute
+  AuthenticatedHadithRoute: typeof AuthenticatedHadithRoute
   AuthenticatedJuzzRoute: typeof AuthenticatedJuzzRoute
+  AuthenticatedMethodeRoute: typeof AuthenticatedMethodeRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedStatistiquesRoute: typeof AuthenticatedStatistiquesRoute
   AuthenticatedTableauDeBordRoute: typeof AuthenticatedTableauDeBordRoute
+  AuthenticatedTajwidRoute: typeof AuthenticatedTajwidRoute
   AuthenticatedSouratesIdRoute: typeof AuthenticatedSouratesIdRoute
   AuthenticatedSouratesIndexRoute: typeof AuthenticatedSouratesIndexRoute
 }
@@ -259,10 +319,13 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCalendrierRoute: AuthenticatedCalendrierRoute,
   AuthenticatedDefisRoute: AuthenticatedDefisRoute,
+  AuthenticatedHadithRoute: AuthenticatedHadithRoute,
   AuthenticatedJuzzRoute: AuthenticatedJuzzRoute,
+  AuthenticatedMethodeRoute: AuthenticatedMethodeRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedStatistiquesRoute: AuthenticatedStatistiquesRoute,
   AuthenticatedTableauDeBordRoute: AuthenticatedTableauDeBordRoute,
+  AuthenticatedTajwidRoute: AuthenticatedTajwidRoute,
   AuthenticatedSouratesIdRoute: AuthenticatedSouratesIdRoute,
   AuthenticatedSouratesIndexRoute: AuthenticatedSouratesIndexRoute,
 }

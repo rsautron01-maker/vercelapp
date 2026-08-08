@@ -6,9 +6,9 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  BookOpen,
   CalendarPlus,
   Check,
-  Palette,
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -28,7 +28,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TajweedLegend, TajweedText } from "@/components/tajweed-text";
+import { TajweedText } from "@/components/tajweed-text";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/ui-kit";
 
@@ -63,12 +63,9 @@ function SurahDetail() {
   const { create } = useReviewMutations();
 
   const [mode, setMode] = useState<ReadMode | null>(null);
-  const [colored, setColored] = useState<boolean | null>(null);
-  const [showLegend, setShowLegend] = useState(true);
 
   const readMode: ReadMode =
     mode ?? (profile?.script_mode === "phonetic" ? "both" : "arabic");
-  const useColors = colored ?? profile?.show_tajweed !== false;
 
   const { data: ayahs, isLoading } = useQuery({
     queryKey: ["surah-tajweed", number],
@@ -163,16 +160,11 @@ function SurahDetail() {
             <TabsTrigger value="phonetic">Phonétique</TabsTrigger>
           </TabsList>
         </Tabs>
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-sm">
-            <Palette className="size-4 text-primary" />
-            Couleurs tajwid
-            <Switch checked={useColors} onCheckedChange={setColored} />
-          </label>
-          <Button variant="ghost" size="sm" onClick={() => setShowLegend((v) => !v)}>
-            {showLegend ? "Masquer la légende" : "Voir la légende"}
-          </Button>
-        </div>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/tajwid">
+            <BookOpen className="mr-1.5 size-4" /> Règles de tajwid
+          </Link>
+        </Button>
       </div>
 
       {readMode !== "arabic" && (
@@ -186,7 +178,6 @@ function SurahDetail() {
         </div>
       )}
 
-      {useColors && showLegend && <TajweedLegend className="mb-6" />}
 
       <div className="space-y-3">
         {isLoading &&
@@ -243,11 +234,7 @@ function SurahDetail() {
               </div>
 
               {readMode !== "phonetic" && (
-                <TajweedText
-                  raw={ayah.text}
-                  colored={useColors}
-                  className="text-2xl leading-[2.2]"
-                />
+                <TajweedText raw={ayah.text} className="text-2xl leading-[2.2]" />
               )}
               {readMode !== "arabic" && (
                 <p
