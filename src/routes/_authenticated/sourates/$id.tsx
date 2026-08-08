@@ -163,16 +163,11 @@ function SurahDetail() {
             <TabsTrigger value="phonetic">Phonétique</TabsTrigger>
           </TabsList>
         </Tabs>
-        <div className="flex items-center gap-4">
-          <label className="flex items-center gap-2 text-sm">
-            <Palette className="size-4 text-primary" />
-            Couleurs tajwid
-            <Switch checked={useColors} onCheckedChange={setColored} />
-          </label>
-          <Button variant="ghost" size="sm" onClick={() => setShowLegend((v) => !v)}>
-            {showLegend ? "Masquer la légende" : "Voir la légende"}
-          </Button>
-        </div>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/tajwid">
+            <BookOpen className="mr-1.5 size-4" /> Règles de tajwid
+          </Link>
+        </Button>
       </div>
 
       {readMode !== "arabic" && (
@@ -186,7 +181,6 @@ function SurahDetail() {
         </div>
       )}
 
-      {useColors && showLegend && <TajweedLegend className="mb-6" />}
 
       <div className="space-y-3">
         {isLoading &&
