@@ -98,6 +98,15 @@ function SurahDetail() {
 
   const known = [...statusOf.values()].filter((s) => s !== "todo").length;
   const percent = (known / surah.ayahs) * 100;
+  const showColors = colored ?? profile?.show_tajweed ?? true;
+
+  const tracks = useMemo(
+    () => (ayahs ?? []).map((a) => ({ globalNumber: a.number, numberInSurah: a.numberInSurah })),
+    [ayahs],
+  );
+  const { bar, playAyah, currentAyah } = useQuranAudio(number, tracks);
+
+
 
   function planReview() {
     const due = new Date();
