@@ -1,7 +1,7 @@
 import { SURAHS, type Surah } from "@/data/quran";
 import { stripTajweed } from "@/lib/tajweed";
 
-export type Ayah = { numberInSurah: number; text: string };
+export type Ayah = { numberInSurah: number; text: string; number: number };
 
 const caches = new Map<string, Map<number, Ayah[]>>();
 
