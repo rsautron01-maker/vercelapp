@@ -230,6 +230,7 @@ function SurahDetail() {
                 "surface p-5",
                 status === "learned" && "border-primary/40 bg-primary-soft",
                 status === "review" && "border-gold/40 bg-gold-soft",
+                currentAyah === ayah.numberInSurah && "ring-2 ring-primary",
               )}
             >
               <div className="mb-3 flex items-center justify-between">
@@ -237,6 +238,14 @@ function SurahDetail() {
                   {ayah.numberInSurah}
                 </span>
                 <div className="flex gap-1.5">
+                  <Button
+                    size="sm"
+                    variant={currentAyah === ayah.numberInSurah ? "default" : "outline"}
+                    onClick={() => playAyah(ayah.numberInSurah)}
+                    title="Écouter ce verset"
+                  >
+                    <Play className="size-3.5" />
+                  </Button>
                   <Button
                     size="sm"
                     variant={status === "learned" ? "default" : "outline"}
@@ -267,8 +276,13 @@ function SurahDetail() {
               </div>
 
               {readMode !== "phonetic" && (
-                <TajweedText raw={ayah.text} className="text-2xl leading-[2.2]" />
+                <TajweedText
+                  raw={ayah.text}
+                  colored={showColors}
+                  className="text-2xl leading-[2.2]"
+                />
               )}
+
               {readMode !== "arabic" && (
                 <p
                   className={cn(
