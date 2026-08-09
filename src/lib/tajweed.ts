@@ -63,29 +63,29 @@ export type TajweedGroup =
 
 const RULE_TO_GROUP: Record<TajweedRule, TajweedGroup> = {
   // Allongements
-  madda_necessary: "madd6", // المد اللازم — 6 harakât
-  madda_obligatory: "madd45", // المد الواجب المتصل — 4 à 5 harakât
-  madda_permissible: "madd246", // المد الجائز المنفصل — 2, 4 ou 6 harakât
+  madda_necessary: "madd6", // rouge — 6 temps
+  madda_obligatory: "madd45", // rose — 4 temps
+  madda_permissible: "madd246", // orange — 2/4/6 temps
   madda_normal: "plain", // madd naturel : pas de couleur
-  // Nasalisation (ghunnah) : shaddah sur ن/م, idghâm bi-ghunnah, ikhfâ', iqlâb, ikhfâ' shafawî
+  // Vert : rounna / ghunnah
   ghunnah: "ghunnah",
   idgham_ghunnah: "ghunnah",
   ikhafa: "ghunnah",
   ikhafa_shafawi: "ghunnah",
   idgham_shafawi: "ghunnah",
   iqlab: "ghunnah",
-  // Idghâm sans nasalisation (ل ر) et idghâm des lettres proches/semblables
+  // Gris : lettres non prononcées / fusionnées
   idgham_wo_ghunnah: "idgham",
   idgham_mutajanisayn: "idgham",
   idgham_mutaqaribayn: "idgham",
-  // Rebond
+  slnt: "idgham",
+  laam_shamsiyah: "idgham",
+  // Bleu marine
   qalaqah: "qalqalah",
-  // Emphase
+  // Bleu foncé
   tafkheem: "tafkheem",
   // Non coloré
   ham_wasl: "plain",
-  slnt: "plain",
-  laam_shamsiyah: "plain",
 };
 
 export const TAJWEED_LEGEND: {
@@ -96,47 +96,48 @@ export const TAJWEED_LEGEND: {
 }[] = [
   {
     group: "madd6",
-    label: "Al-Madd Lâzim — 6 harakât",
+    label: "Rouge — allongement 6 temps",
     arabic: "المد اللازم",
-    hint: "Lettre de madd (ا و ي) suivie d'une shaddah ou d'un soukoûn permanent. Ex. الضَّالِّينَ.",
+    hint: "Allongement obligatoire de 6 harakât (ex. fin de la sourate Al-Fâtiha : الضَّالِّينَ).",
   },
   {
     group: "madd45",
-    label: "Al-Madd Wâjib Muttasil — 4-5 harakât",
+    label: "Rose — allongement 4 (à 5) temps",
     arabic: "المد الواجب المتصل",
-    hint: "Lettre de madd suivie d'un hamzah dans le même mot. Ex. جَاءَ, السَّمَاءِ, سُوءٌ.",
+    hint: "Lettre de madd suivie d'un hamzah dans le même mot. Ex. جَاءَ, السَّمَاءِ.",
   },
   {
     group: "madd246",
-    label: "Al-Madd Jâ'iz Munfasil — 2/4/6 harakât",
+    label: "Orange — allongement 2, 4 ou 6 temps",
     arabic: "المد الجائز المنفصل",
-    hint: "Madd en fin de mot, mot suivant commençant par un hamzah. Ex. فِي أَنفُسِكُمْ.",
+    hint: "Allongement souple, souvent en fin de verset ou avant un mot commençant par hamzah. Ex. فِي أَنفُسِكُمْ.",
   },
   {
     group: "ghunnah",
-    label: "Ġunnah — 2 harakât",
+    label: "Vert — rounna (nasillement), 2 temps",
     arabic: "الغنة",
-    hint: "نّ / مّ avec shaddah, idghâm bi-ghunnah (ينمو), ikhfâ' (15 lettres), iqlâb (نْ + ب), ikhfâ' shafawî (مْ + ب).",
+    hint: "Le son sort par le nez pendant 2 temps : نّ / مّ, idghâm bi-ghunnah, ikhfâ', iqlâb.",
   },
   {
     group: "idgham",
-    label: "'Idġâm sans ġunnah",
-    arabic: "الإدغام بغير غنة",
-    hint: "نْ ou tanwîn suivi de ل ou ر : fusion sans nasalisation. Ex. مِنْ رَبِّهِمْ, مِنْ لَدُنْهُ.",
-  },
-  {
-    group: "tafkheem",
-    label: "Tafkhîm",
-    arabic: "التفخيم",
-    hint: "Lettres emphatiques prononcées « grasses » : خ ص ض ط ظ غ ق.",
+    label: "Gris — lettre non prononcée",
+    arabic: "الإدغام / الحرف الساكت",
+    hint: "On lit comme si la lettre n'existait pas : lettres muettes, lâm solaire, idghâm sans ghunnah (ل ر).",
   },
   {
     group: "qalqalah",
-    label: "Q̇alq̇alah",
+    label: "Bleu marine — qalqalah",
     arabic: "القلقلة",
-    hint: "Rebond sur قطب جد (ق ط ب ج د) en soukoûn. Mineure au milieu du mot, majeure à l'arrêt.",
+    hint: "Vibration explosive sur ق ط ب ج د en soukoûn ou à l'arrêt. Ex. « Ibrahim » → « i-beu-rôhîm ».",
+  },
+  {
+    group: "tafkheem",
+    label: "Bleu foncé — emphatisation",
+    arabic: "التفخيم",
+    hint: "Le fond de la langue remonte au palais : خ ص ض ط ظ غ ق, et اللَّه → « A-LLOOH ».",
   },
 ];
+
 
 /** Lettres d'isti'lâ' (tafkheem) détectées hors annotation API. */
 const TAFKHEEM_LETTERS = new Set(["خ", "ص", "ض", "ط", "ظ", "غ", "ق"]);
