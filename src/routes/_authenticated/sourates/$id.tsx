@@ -165,6 +165,8 @@ function SurahDetail() {
         </div>
       </div>
 
+      <div className="mb-4">{bar}</div>
+
       <div className="surface mb-4 flex flex-wrap items-center justify-between gap-4 p-4">
         <Tabs value={readMode} onValueChange={(value) => setMode(value as ReadMode)}>
           <TabsList>
@@ -173,12 +175,28 @@ function SurahDetail() {
             <TabsTrigger value="phonetic">Phonétique</TabsTrigger>
           </TabsList>
         </Tabs>
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/tajwid">
-            <BookOpen className="mr-1.5 size-4" /> Règles de tajwid
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-4">
+          <label className="flex items-center gap-2 text-xs font-medium">
+            <Palette className="size-4 text-muted-foreground" />
+            Couleurs tajwid
+            <Switch checked={showColors} onCheckedChange={setColored} />
+          </label>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/tajwid">
+              <BookOpen className="mr-1.5 size-4" /> Règles de tajwid
+            </Link>
+          </Button>
+        </div>
       </div>
+
+      {showColors && (
+        <div className="surface mb-4 p-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Signification des couleurs
+          </p>
+          <TajweedLegend />
+        </div>
+      )}
 
       {readMode !== "arabic" && (
         <div className="surface mb-4 flex gap-3 border-gold/40 bg-gold-soft p-4">
@@ -190,6 +208,8 @@ function SurahDetail() {
           </p>
         </div>
       )}
+
+
 
 
       <div className="space-y-3">
