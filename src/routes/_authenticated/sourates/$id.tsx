@@ -66,6 +66,7 @@ function SurahDetail() {
   const { create } = useReviewMutations();
 
   const [mode, setMode] = useState<ReadMode | null>(null);
+  const [colored, setColored] = useState<boolean | null>(null);
 
   const readMode: ReadMode =
     mode ?? (profile?.script_mode === "phonetic" ? "both" : "arabic");
