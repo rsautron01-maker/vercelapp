@@ -21,11 +21,12 @@ async function fetchEdition(surah: number, edition: string): Promise<Ayah[]> {
   const res = await fetch(`https://api.alquran.cloud/v1/surah/${surah}/${edition}`);
   if (!res.ok) throw new Error("Impossible de charger le texte de la sourate");
   const json = (await res.json()) as {
-    data: { ayahs: { numberInSurah: number; text: string }[] };
+    data: { ayahs: { numberInSurah: number; text: string; number: number }[] };
   };
   const ayahs = json.data.ayahs.map((a) => ({
     numberInSurah: a.numberInSurah,
     text: a.text,
+    number: a.number,
   }));
   cache.set(surah, ayahs);
   return ayahs;
