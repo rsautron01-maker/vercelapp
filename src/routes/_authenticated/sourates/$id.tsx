@@ -9,6 +9,8 @@ import {
   BookOpen,
   CalendarPlus,
   Check,
+  Palette,
+  Play,
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -28,7 +30,8 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TajweedText } from "@/components/tajweed-text";
+import { TajweedLegend, TajweedText } from "@/components/tajweed-text";
+import { useQuranAudio } from "@/components/quran-audio";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/ui-kit";
 
