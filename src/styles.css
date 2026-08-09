@@ -206,26 +206,27 @@
   }
 }
 
-/* ---------- Couleurs Tajwid (mushaf coloré — 7 règles) ---------- */
+/* ---------- Couleurs Tajwid (identiques à tajwid-online.com) ---------- */
 :root {
-  --tj-madd6: #7c0b52; /* Al-Madd Lâzim — 6 harakât */
-  --tj-madd45: #ec008c; /* Al-Madd Wâjib Muttasil — 4-5 harakât */
-  --tj-madd246: #f58220; /* Al-Madd Jâ'iz Munfasil — 2/4/6 harakât */
-  --tj-ghunnah: #00a651; /* Ġunnah 2 harakât */
-  --tj-idgham: #949494; /* 'Idġâm sans ghunnah */
-  --tj-tafkheem: #17607d; /* Tafkhîm */
-  --tj-qalqalah: #00aeef; /* Qalqalah */
+  --tj-madd6: #e00000; /* Rouge — allongement 6 temps */
+  --tj-madd45: #ed4fae; /* Rose — allongement 4 temps */
+  --tj-madd246: #ff9900; /* Orange — allongement 2/4/6 temps */
+  --tj-ghunnah: #33cc00; /* Vert — rounna (nasillement) */
+  --tj-idgham: #999999; /* Gris — lettre non prononcée / idghâm */
+  --tj-tafkheem: #4451ff; /* Bleu foncé — emphatisation */
+  --tj-qalqalah: #59beff; /* Bleu marine — qalqalah */
 }
 
 .dark {
-  --tj-madd6: #ff7ac9;
-  --tj-madd45: #ff58b4;
-  --tj-madd246: #ffa14a;
-  --tj-ghunnah: #3ddc8b;
-  --tj-idgham: #bdbdbd;
-  --tj-tafkheem: #5cbedf;
-  --tj-qalqalah: #4fd2ff;
+  --tj-madd6: #ff5a5a;
+  --tj-madd45: #ff77c4;
+  --tj-madd246: #ffab3d;
+  --tj-ghunnah: #55e02a;
+  --tj-idgham: #b5b5b5;
+  --tj-tafkheem: #7d87ff;
+  --tj-qalqalah: #8ad3ff;
 }
+
 
 .tj-madd6 { color: var(--tj-madd6); }
 .tj-madd45 { color: var(--tj-madd45); }

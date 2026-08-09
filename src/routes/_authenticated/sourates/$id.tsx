@@ -9,6 +9,8 @@ import {
   BookOpen,
   CalendarPlus,
   Check,
+  Palette,
+  Play,
   RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -28,7 +30,8 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TajweedText } from "@/components/tajweed-text";
+import { TajweedLegend, TajweedText } from "@/components/tajweed-text";
+import { useQuranAudio } from "@/components/quran-audio";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/ui-kit";
 
@@ -63,6 +66,7 @@ function SurahDetail() {
   const { create } = useReviewMutations();
 
   const [mode, setMode] = useState<ReadMode | null>(null);
+  const [colored, setColored] = useState<boolean | null>(null);
 
   const readMode: ReadMode =
     mode ?? (profile?.script_mode === "phonetic" ? "both" : "arabic");
@@ -94,6 +98,15 @@ function SurahDetail() {
 
   const known = [...statusOf.values()].filter((s) => s !== "todo").length;
   const percent = (known / surah.ayahs) * 100;
+  const showColors = colored ?? profile?.show_tajweed ?? true;
+
+  const tracks = useMemo(
+    () => (ayahs ?? []).map((a) => ({ globalNumber: a.number, numberInSurah: a.numberInSurah })),
+    [ayahs],
+  );
+  const { bar, playAyah, currentAyah } = useQuranAudio(number, tracks);
+
+
 
   function planReview() {
     const due = new Date();
@@ -152,6 +165,8 @@ function SurahDetail() {
         </div>
       </div>
 
+      <div className="mb-4">{bar}</div>
+
       <div className="surface mb-4 flex flex-wrap items-center justify-between gap-4 p-4">
         <Tabs value={readMode} onValueChange={(value) => setMode(value as ReadMode)}>
           <TabsList>
@@ -160,12 +175,28 @@ function SurahDetail() {
             <TabsTrigger value="phonetic">Phonétique</TabsTrigger>
           </TabsList>
         </Tabs>
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/tajwid">
-            <BookOpen className="mr-1.5 size-4" /> Règles de tajwid
-          </Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-4">
+          <label className="flex items-center gap-2 text-xs font-medium">
+            <Palette className="size-4 text-muted-foreground" />
+            Couleurs tajwid
+            <Switch checked={showColors} onCheckedChange={setColored} />
+          </label>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/tajwid">
+              <BookOpen className="mr-1.5 size-4" /> Règles de tajwid
+            </Link>
+          </Button>
+        </div>
       </div>
+
+      {showColors && (
+        <div className="surface mb-4 p-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Signification des couleurs
+          </p>
+          <TajweedLegend />
+        </div>
+      )}
 
       {readMode !== "arabic" && (
         <div className="surface mb-4 flex gap-3 border-gold/40 bg-gold-soft p-4">
@@ -177,6 +208,8 @@ function SurahDetail() {
           </p>
         </div>
       )}
+
+
 
 
       <div className="space-y-3">
@@ -197,6 +230,7 @@ function SurahDetail() {
                 "surface p-5",
                 status === "learned" && "border-primary/40 bg-primary-soft",
                 status === "review" && "border-gold/40 bg-gold-soft",
+                currentAyah === ayah.numberInSurah && "ring-2 ring-primary",
               )}
             >
               <div className="mb-3 flex items-center justify-between">
@@ -204,6 +238,14 @@ function SurahDetail() {
                   {ayah.numberInSurah}
                 </span>
                 <div className="flex gap-1.5">
+                  <Button
+                    size="sm"
+                    variant={currentAyah === ayah.numberInSurah ? "default" : "outline"}
+                    onClick={() => playAyah(ayah.numberInSurah)}
+                    title="Écouter ce verset"
+                  >
+                    <Play className="size-3.5" />
+                  </Button>
                   <Button
                     size="sm"
                     variant={status === "learned" ? "default" : "outline"}
@@ -234,8 +276,13 @@ function SurahDetail() {
               </div>
 
               {readMode !== "phonetic" && (
-                <TajweedText raw={ayah.text} className="text-2xl leading-[2.2]" />
+                <TajweedText
+                  raw={ayah.text}
+                  colored={showColors}
+                  className="text-2xl leading-[2.2]"
+                />
               )}
+
               {readMode !== "arabic" && (
                 <p
                   className={cn(
