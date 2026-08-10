@@ -34,7 +34,13 @@ export type ChallengeMode =
   | "quiz-islam"
   | "quiz-prophetes"
   | "quiz-devinette"
-  | "quiz-tajweed";
+  | "quiz-tajweed"
+  | "quiz-tawhid"
+  | "quiz-seerah"
+  | "quiz-fiqh"
+  | "quiz-sciences";
+
+export type ChallengeFamily = "coran" | "connaissances";
 
 
 export const CHALLENGES: {
