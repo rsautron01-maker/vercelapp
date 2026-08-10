@@ -352,7 +352,15 @@ async function buildQuestion(mode: ChallengeMode, scope: Scope = { kind: "all" }
   };
 }
 
-export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit: () => void }) {
+export function ChallengeRunner({
+  mode,
+  scope = { kind: "all" },
+  onExit,
+}: {
+  mode: ChallengeMode;
+  scope?: Scope;
+  onExit: () => void;
+}) {
   const config = CHALLENGES.find((c) => c.mode === mode)!;
   const isChrono = mode === "chrono";
   const save = useSaveChallenge();
@@ -371,11 +379,12 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
     setRevealed(false);
     setInput("");
     try {
-      setQuestion(await buildQuestion(mode));
+      setQuestion(await buildQuestion(mode, scope));
     } finally {
       setLoading(false);
     }
-  }, [mode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, scope.kind, (scope as { value?: number }).value]);
 
   useEffect(() => {
     void load();
@@ -467,6 +476,9 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
         <div>
           <h2 className="font-display text-xl font-semibold">{config.title}</h2>
           <p className="text-sm text-muted-foreground">{config.description}</p>
+          {config.family === "coran" && (
+            <p className="mt-1 text-xs font-medium text-primary">Périmètre : {scopeLabel(scope)}</p>
+          )}
         </div>
         <div className="flex items-center gap-3">
           {isChrono && (
