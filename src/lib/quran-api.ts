@@ -1,4 +1,5 @@
 import { SURAHS, type Surah } from "@/data/quran";
+import { rangeSurahs, type Range } from "@/data/scope";
 import { stripTajweed } from "@/lib/tajweed";
 
 export type Ayah = { numberInSurah: number; text: string; number: number };
