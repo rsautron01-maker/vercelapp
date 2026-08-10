@@ -69,6 +69,19 @@ export async function randomVerse(preferSurahs?: number[]): Promise<VerseRef> {
   return { surah, ayah: ayahs[index].numberInSurah, text: ayahs[index].text };
 }
 
+/** Tire un verset au hasard dans un périmètre (juzz, hizb, sourate). */
+export async function randomVerseInRange(range: Range): Promise<VerseRef> {
+  const parts = rangeSurahs(range).filter((p) => p.to > p.from);
+  const pool = parts.length > 0 ? parts : rangeSurahs(range);
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  const ayahs = await fetchSurahText(pick.surah);
+  const max = Math.max(pick.from, pick.to - 1);
+  const ayah = pick.from + Math.floor(Math.random() * (max - pick.from + 1));
+  const found = ayahs.find((a) => a.numberInSurah === ayah) ?? ayahs[0];
+  return { surah: SURAHS[pick.surah - 1], ayah: found.numberInSurah, text: found.text };
+}
+
+
 export async function versesAround(
   surah: number,
   ayah: number,
