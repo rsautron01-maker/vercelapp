@@ -4,6 +4,7 @@ import { Check, RefreshCw, Timer, X } from "lucide-react";
 
 import { SURAHS, surahOf } from "@/data/quran";
 import { randomQuiz, shuffle, type QuizCategory } from "@/data/quiz";
+import { scopeLabel, scopeRange, type Scope } from "@/data/scope";
 
 import {
   fetchSurahText,
@@ -11,6 +12,7 @@ import {
   matchesSurahName,
   normalize,
   randomVerse,
+  randomVerseInRange,
   versesAround,
   type VerseRef,
 } from "@/lib/quran-api";
@@ -34,7 +36,13 @@ export type ChallengeMode =
   | "quiz-islam"
   | "quiz-prophetes"
   | "quiz-devinette"
-  | "quiz-tajweed";
+  | "quiz-tajweed"
+  | "quiz-tawhid"
+  | "quiz-seerah"
+  | "quiz-fiqh"
+  | "quiz-sciences";
+
+export type ChallengeFamily = "coran" | "connaissances";
 
 
 export const CHALLENGES: {
@@ -43,6 +51,7 @@ export const CHALLENGES: {
   description: string;
   prompt: string;
   auto: boolean;
+  family: ChallengeFamily;
 }[] = [
   {
     mode: "next-verse",
@@ -50,6 +59,7 @@ export const CHALLENGES: {
     description: "Un verset s'affiche en arabe : choisissez le verset qui suit.",
     prompt: "Choisissez le verset suivant",
     auto: true,
+    family: "coran",
   },
   {
     mode: "guess-surah",
@@ -57,6 +67,7 @@ export const CHALLENGES: {
     description: "Identifiez la sourate à partir d'un verset.",
     prompt: "Nom de la sourate",
     auto: true,
+    family: "coran",
   },
   {
     mode: "complete-verse",
@@ -64,6 +75,7 @@ export const CHALLENGES: {
     description: "Des mots sont masqués, retrouvez-les.",
     prompt: "Les mots manquants",
     auto: false,
+    family: "coran",
   },
   {
     mode: "verse-number",
@@ -71,6 +83,7 @@ export const CHALLENGES: {
     description: "Devinez le numéro du verset affiché.",
     prompt: "Numéro du verset",
     auto: true,
+    family: "coran",
   },
   {
     mode: "order-verses",
@@ -78,6 +91,7 @@ export const CHALLENGES: {
     description: "Trois versets mélangés à réordonner mentalement.",
     prompt: "Numéros dans l'ordre (ex. 3-1-2)",
     auto: false,
+    family: "coran",
   },
   {
     mode: "first-word",
@@ -85,6 +99,7 @@ export const CHALLENGES: {
     description: "Seul le premier mot est donné : complétez le verset.",
     prompt: "La suite du verset",
     auto: false,
+    family: "coran",
   },
   {
     mode: "surah-name",
@@ -92,6 +107,7 @@ export const CHALLENGES: {
     description: "Un nom de sourate est donné, récitez son premier verset.",
     prompt: "Le premier verset",
     auto: false,
+    family: "coran",
   },
   {
     mode: "juz-locate",
@@ -99,6 +115,7 @@ export const CHALLENGES: {
     description: "Dans quel juzz se trouve ce verset ?",
     prompt: "Numéro du juzz",
     auto: false,
+    family: "coran",
   },
   {
     mode: "chrono",
@@ -106,6 +123,7 @@ export const CHALLENGES: {
     description: "Un maximum de sourates identifiées en 60 secondes.",
     prompt: "Nom de la sourate",
     auto: true,
+    family: "coran",
   },
   {
     mode: "recite",
@@ -113,6 +131,39 @@ export const CHALLENGES: {
     description: "Récitez le passage à voix haute puis auto-évaluez-vous.",
     prompt: "Notez votre récitation",
     auto: false,
+    family: "coran",
+  },
+  {
+    mode: "quiz-tawhid",
+    title: "Quiz tawhid & 'aqîda",
+    description: "Unicité d'Allah, shirk, noms et attributs, piliers de la foi.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
+  },
+  {
+    mode: "quiz-seerah",
+    title: "Quiz sîra",
+    description: "La vie du Prophète ﷺ : Hégire, batailles, compagnons.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
+  },
+  {
+    mode: "quiz-fiqh",
+    title: "Quiz fiqh du quotidien",
+    description: "Prière, purification, jeûne, zakât : les bases pratiques.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
+  },
+  {
+    mode: "quiz-sciences",
+    title: "Quiz sciences du Coran",
+    description: "Juzz, hizb, mus'haf, sourates mecquoises et médinoises.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-islam",
@@ -120,6 +171,7 @@ export const CHALLENGES: {
     description: "Questions à choix multiples sur l'islam et le Coran.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-prophetes",
@@ -127,6 +179,7 @@ export const CHALLENGES: {
     description: "Reconnaissez les prophètes et leurs histoires.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-devinette",
@@ -134,6 +187,7 @@ export const CHALLENGES: {
     description: "« Qui suis-je ? » : devinez la sourate ou le verset.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-tajweed",
@@ -141,6 +195,7 @@ export const CHALLENGES: {
     description: "Ghunnah, qalqalah, madd, idghâm : testez vos règles.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
 ];
 
@@ -149,7 +204,12 @@ const QUIZ_MODES: Record<string, QuizCategory> = {
   "quiz-prophetes": "prophetes",
   "quiz-devinette": "devinette",
   "quiz-tajweed": "tajweed",
+  "quiz-tawhid": "tawhid",
+  "quiz-seerah": "seerah",
+  "quiz-fiqh": "fiqh",
+  "quiz-sciences": "coran-sciences",
 };
+
 
 type Question = {
   verse?: VerseRef;
@@ -162,7 +222,7 @@ type Question = {
   check?: (input: string) => boolean;
 };
 
-async function buildQuestion(mode: ChallengeMode): Promise<Question> {
+async function buildQuestion(mode: ChallengeMode, scope: Scope = { kind: "all" }): Promise<Question> {
   const category = QUIZ_MODES[mode];
   if (category) {
     const item = randomQuiz(category);
@@ -175,7 +235,11 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
     };
   }
 
-  const verse = await randomVerse();
+  const range = scopeRange(scope);
+  const pickVerse = () => (range ? randomVerseInRange(range) : randomVerse());
+
+
+  const verse = await pickVerse();
 
   const surah = verse.surah;
 
@@ -268,12 +332,15 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
   const { next } = await versesAround(surah.number, verse.ayah, 1, 0);
   const correct = next[0]?.text ?? "";
   const decoys: string[] = [];
-  while (decoys.length < 3) {
-    const other = await randomVerse();
+  let attempts = 0;
+  while (decoys.length < 3 && attempts < 25) {
+    attempts += 1;
+    const other = attempts > 12 ? await randomVerse() : await pickVerse();
     if (normalize(other.text) === normalize(correct) || normalize(other.text) === normalize(verse.text)) continue;
     if (decoys.some((d) => normalize(d) === normalize(other.text))) continue;
     decoys.push(other.text);
   }
+
   return {
     verse,
     question: `Quel verset suit ${surah.translit} v.${verse.ayah} ?`,
@@ -285,7 +352,15 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
   };
 }
 
-export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit: () => void }) {
+export function ChallengeRunner({
+  mode,
+  scope = { kind: "all" },
+  onExit,
+}: {
+  mode: ChallengeMode;
+  scope?: Scope;
+  onExit: () => void;
+}) {
   const config = CHALLENGES.find((c) => c.mode === mode)!;
   const isChrono = mode === "chrono";
   const save = useSaveChallenge();
@@ -304,11 +379,12 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
     setRevealed(false);
     setInput("");
     try {
-      setQuestion(await buildQuestion(mode));
+      setQuestion(await buildQuestion(mode, scope));
     } finally {
       setLoading(false);
     }
-  }, [mode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, scope.kind, (scope as { value?: number }).value]);
 
   useEffect(() => {
     void load();
@@ -400,6 +476,9 @@ export function ChallengeRunner({ mode, onExit }: { mode: ChallengeMode; onExit:
         <div>
           <h2 className="font-display text-xl font-semibold">{config.title}</h2>
           <p className="text-sm text-muted-foreground">{config.description}</p>
+          {config.family === "coran" && (
+            <p className="mt-1 text-xs font-medium text-primary">Périmètre : {scopeLabel(scope)}</p>
+          )}
         </div>
         <div className="flex items-center gap-3">
           {isChrono && (
