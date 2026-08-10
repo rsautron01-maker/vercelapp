@@ -220,7 +220,7 @@ type Question = {
   check?: (input: string) => boolean;
 };
 
-async function buildQuestion(mode: ChallengeMode): Promise<Question> {
+async function buildQuestion(mode: ChallengeMode, scope: Scope = { kind: "all" }): Promise<Question> {
   const category = QUIZ_MODES[mode];
   if (category) {
     const item = randomQuiz(category);
@@ -232,6 +232,10 @@ async function buildQuestion(mode: ChallengeMode): Promise<Question> {
       check: (input) => input === item.answer,
     };
   }
+
+  const range = scopeRange(scope);
+  const pickVerse = () => (range ? randomVerseInRange(range) : randomVerse());
+
 
   const verse = await randomVerse();
 
