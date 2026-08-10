@@ -49,6 +49,7 @@ export const CHALLENGES: {
   description: string;
   prompt: string;
   auto: boolean;
+  family: ChallengeFamily;
 }[] = [
   {
     mode: "next-verse",
