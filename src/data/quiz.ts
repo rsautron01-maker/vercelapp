@@ -1,5 +1,13 @@
 // Banques de questions : culture islamique, prophètes, devinettes, tajwid.
-export type QuizCategory = "islam" | "prophetes" | "devinette" | "tajweed";
+export type QuizCategory =
+  | "islam"
+  | "prophetes"
+  | "devinette"
+  | "tajweed"
+  | "tawhid"
+  | "seerah"
+  | "fiqh"
+  | "coran-sciences";
 
 export type QuizQuestion = {
   category: QuizCategory;
