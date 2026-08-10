@@ -4,6 +4,7 @@ import { Check, RefreshCw, Timer, X } from "lucide-react";
 
 import { SURAHS, surahOf } from "@/data/quran";
 import { randomQuiz, shuffle, type QuizCategory } from "@/data/quiz";
+import { scopeLabel, scopeRange, type Scope } from "@/data/scope";
 
 import {
   fetchSurahText,
@@ -11,6 +12,7 @@ import {
   matchesSurahName,
   normalize,
   randomVerse,
+  randomVerseInRange,
   versesAround,
   type VerseRef,
 } from "@/lib/quran-api";
@@ -237,7 +239,7 @@ async function buildQuestion(mode: ChallengeMode, scope: Scope = { kind: "all" }
   const pickVerse = () => (range ? randomVerseInRange(range) : randomVerse());
 
 
-  const verse = await randomVerse();
+  const verse = await pickVerse();
 
   const surah = verse.surah;
 
@@ -331,7 +333,7 @@ async function buildQuestion(mode: ChallengeMode, scope: Scope = { kind: "all" }
   const correct = next[0]?.text ?? "";
   const decoys: string[] = [];
   while (decoys.length < 3) {
-    const other = await randomVerse();
+    const other = await pickVerse();
     if (normalize(other.text) === normalize(correct) || normalize(other.text) === normalize(verse.text)) continue;
     if (decoys.some((d) => normalize(d) === normalize(other.text))) continue;
     decoys.push(other.text);
