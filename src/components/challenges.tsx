@@ -57,6 +57,7 @@ export const CHALLENGES: {
     description: "Un verset s'affiche en arabe : choisissez le verset qui suit.",
     prompt: "Choisissez le verset suivant",
     auto: true,
+    family: "coran",
   },
   {
     mode: "guess-surah",
@@ -64,6 +65,7 @@ export const CHALLENGES: {
     description: "Identifiez la sourate à partir d'un verset.",
     prompt: "Nom de la sourate",
     auto: true,
+    family: "coran",
   },
   {
     mode: "complete-verse",
@@ -71,6 +73,7 @@ export const CHALLENGES: {
     description: "Des mots sont masqués, retrouvez-les.",
     prompt: "Les mots manquants",
     auto: false,
+    family: "coran",
   },
   {
     mode: "verse-number",
@@ -78,6 +81,7 @@ export const CHALLENGES: {
     description: "Devinez le numéro du verset affiché.",
     prompt: "Numéro du verset",
     auto: true,
+    family: "coran",
   },
   {
     mode: "order-verses",
@@ -85,6 +89,7 @@ export const CHALLENGES: {
     description: "Trois versets mélangés à réordonner mentalement.",
     prompt: "Numéros dans l'ordre (ex. 3-1-2)",
     auto: false,
+    family: "coran",
   },
   {
     mode: "first-word",
@@ -92,6 +97,7 @@ export const CHALLENGES: {
     description: "Seul le premier mot est donné : complétez le verset.",
     prompt: "La suite du verset",
     auto: false,
+    family: "coran",
   },
   {
     mode: "surah-name",
@@ -99,6 +105,7 @@ export const CHALLENGES: {
     description: "Un nom de sourate est donné, récitez son premier verset.",
     prompt: "Le premier verset",
     auto: false,
+    family: "coran",
   },
   {
     mode: "juz-locate",
@@ -106,6 +113,7 @@ export const CHALLENGES: {
     description: "Dans quel juzz se trouve ce verset ?",
     prompt: "Numéro du juzz",
     auto: false,
+    family: "coran",
   },
   {
     mode: "chrono",
@@ -113,6 +121,7 @@ export const CHALLENGES: {
     description: "Un maximum de sourates identifiées en 60 secondes.",
     prompt: "Nom de la sourate",
     auto: true,
+    family: "coran",
   },
   {
     mode: "recite",
@@ -120,6 +129,39 @@ export const CHALLENGES: {
     description: "Récitez le passage à voix haute puis auto-évaluez-vous.",
     prompt: "Notez votre récitation",
     auto: false,
+    family: "coran",
+  },
+  {
+    mode: "quiz-tawhid",
+    title: "Quiz tawhid & 'aqîda",
+    description: "Unicité d'Allah, shirk, noms et attributs, piliers de la foi.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
+  },
+  {
+    mode: "quiz-seerah",
+    title: "Quiz sîra",
+    description: "La vie du Prophète ﷺ : Hégire, batailles, compagnons.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
+  },
+  {
+    mode: "quiz-fiqh",
+    title: "Quiz fiqh du quotidien",
+    description: "Prière, purification, jeûne, zakât : les bases pratiques.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
+  },
+  {
+    mode: "quiz-sciences",
+    title: "Quiz sciences du Coran",
+    description: "Juzz, hizb, mus'haf, sourates mecquoises et médinoises.",
+    prompt: "Choisissez la bonne réponse",
+    auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-islam",
@@ -127,6 +169,7 @@ export const CHALLENGES: {
     description: "Questions à choix multiples sur l'islam et le Coran.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-prophetes",
@@ -134,6 +177,7 @@ export const CHALLENGES: {
     description: "Reconnaissez les prophètes et leurs histoires.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-devinette",
@@ -141,6 +185,7 @@ export const CHALLENGES: {
     description: "« Qui suis-je ? » : devinez la sourate ou le verset.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
   {
     mode: "quiz-tajweed",
@@ -148,6 +193,7 @@ export const CHALLENGES: {
     description: "Ghunnah, qalqalah, madd, idghâm : testez vos règles.",
     prompt: "Choisissez la bonne réponse",
     auto: true,
+    family: "connaissances",
   },
 ];
 
@@ -156,7 +202,12 @@ const QUIZ_MODES: Record<string, QuizCategory> = {
   "quiz-prophetes": "prophetes",
   "quiz-devinette": "devinette",
   "quiz-tajweed": "tajweed",
+  "quiz-tawhid": "tawhid",
+  "quiz-seerah": "seerah",
+  "quiz-fiqh": "fiqh",
+  "quiz-sciences": "coran-sciences",
 };
+
 
 type Question = {
   verse?: VerseRef;
