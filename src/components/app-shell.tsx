@@ -15,6 +15,7 @@ import {
   Moon,
   Sun,
   Menu,
+  ShieldCheck,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
@@ -24,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/notification-bell";
 import { GlobalSearch } from "@/components/global-search";
+import { useIsAdmin } from "@/hooks/use-admin";
 
 const NAV = [
   { to: "/tableau-de-bord", label: "Tableau de bord", icon: LayoutDashboard },
@@ -58,6 +60,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
   const { dark, toggle } = useTheme();
   const [openMobile, setOpenMobile] = useState(false);
+  const { data: isAdmin } = useIsAdmin();
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -110,6 +113,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
+
+          {isAdmin && (
+            <Link
+              to="/admin"
+              onClick={() => setOpenMobile(false)}
+              className={cn(
+                "mt-2 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                pathname.startsWith("/admin")
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+              )}
+            >
+              <ShieldCheck className="size-4" /> Administration
+            </Link>
+          )}
         </nav>
 
         <Button variant="ghost" className="justify-start gap-3 text-sidebar-foreground/70" onClick={signOut}>
