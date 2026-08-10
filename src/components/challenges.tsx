@@ -332,12 +332,15 @@ async function buildQuestion(mode: ChallengeMode, scope: Scope = { kind: "all" }
   const { next } = await versesAround(surah.number, verse.ayah, 1, 0);
   const correct = next[0]?.text ?? "";
   const decoys: string[] = [];
-  while (decoys.length < 3) {
-    const other = await pickVerse();
+  let attempts = 0;
+  while (decoys.length < 3 && attempts < 25) {
+    attempts += 1;
+    const other = attempts > 12 ? await randomVerse() : await pickVerse();
     if (normalize(other.text) === normalize(correct) || normalize(other.text) === normalize(verse.text)) continue;
     if (decoys.some((d) => normalize(d) === normalize(other.text))) continue;
     decoys.push(other.text);
   }
+
   return {
     verse,
     question: `Quel verset suit ${surah.translit} v.${verse.ayah} ?`,
