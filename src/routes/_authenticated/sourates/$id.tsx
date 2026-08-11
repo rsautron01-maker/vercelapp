@@ -9,6 +9,7 @@ import {
   BookOpen,
   CalendarPlus,
   Check,
+  Mic,
   Palette,
   Play,
   RotateCcw,
