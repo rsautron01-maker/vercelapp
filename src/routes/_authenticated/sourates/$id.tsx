@@ -166,6 +166,14 @@ function SurahDetail() {
 
       >
         <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setReciteAyah("all")}
+            disabled={!ayahs?.length}
+          >
+            <Mic className="mr-1.5 size-4" /> Réciter la sourate
+          </Button>
           <Button variant="outline" size="sm" onClick={planReview}>
             <CalendarPlus className="mr-1.5 size-4" /> Planifier une révision
           </Button>
