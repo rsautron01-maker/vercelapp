@@ -276,6 +276,15 @@ function SurahDetail() {
                   </Button>
                   <Button
                     size="sm"
+                    variant="outline"
+                    onClick={() => setReciteAyah(ayah.numberInSurah)}
+                    title="Réciter ce verset et vérifier"
+                  >
+                    <Mic className="size-3.5" />
+                  </Button>
+
+                  <Button
+                    size="sm"
                     variant={status === "learned" ? "default" : "outline"}
                     onClick={() =>
                       setStatus.mutate({
