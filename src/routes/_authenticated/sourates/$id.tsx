@@ -108,6 +108,24 @@ function SurahDetail() {
   );
   const { bar, playAyah, currentAyah } = useQuranAudio(number, tracks);
 
+  // Récitation vocale : soit un verset précis, soit la sourate entière.
+  const [reciteAyah, setReciteAyah] = useState<number | "all" | null>(null);
+
+  const plainOf = useMemo(() => {
+    const map = new Map<number, string>();
+    ayahs?.forEach((a) => map.set(a.numberInSurah, stripTajweed(a.text)));
+    return map;
+  }, [ayahs]);
+
+  const reciteText =
+    reciteAyah == null
+      ? ""
+      : reciteAyah === "all"
+        ? [...plainOf.values()].join(" ")
+        : (plainOf.get(reciteAyah) ?? "");
+
+
+
 
 
   function planReview() {
