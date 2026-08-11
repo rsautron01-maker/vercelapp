@@ -9,6 +9,7 @@ import {
   BookOpen,
   CalendarPlus,
   Check,
+  Mic,
   Palette,
   Play,
   RotateCcw,
@@ -32,6 +33,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TajweedLegend, TajweedText } from "@/components/tajweed-text";
 import { useQuranAudio } from "@/components/quran-audio";
+import { RecitationDialog } from "@/components/recitation-dialog";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/ui-kit";
 
@@ -106,6 +108,24 @@ function SurahDetail() {
   );
   const { bar, playAyah, currentAyah } = useQuranAudio(number, tracks);
 
+  // Récitation vocale : soit un verset précis, soit la sourate entière.
+  const [reciteAyah, setReciteAyah] = useState<number | "all" | null>(null);
+
+  const plainOf = useMemo(() => {
+    const map = new Map<number, string>();
+    ayahs?.forEach((a) => map.set(a.numberInSurah, stripTajweed(a.text)));
+    return map;
+  }, [ayahs]);
+
+  const reciteText =
+    reciteAyah == null
+      ? ""
+      : reciteAyah === "all"
+        ? [...plainOf.values()].join(" ")
+        : (plainOf.get(reciteAyah) ?? "");
+
+
+
 
 
   function planReview() {
@@ -146,6 +166,14 @@ function SurahDetail() {
 
       >
         <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setReciteAyah("all")}
+            disabled={!ayahs?.length}
+          >
+            <Mic className="mr-1.5 size-4" /> Réciter la sourate
+          </Button>
           <Button variant="outline" size="sm" onClick={planReview}>
             <CalendarPlus className="mr-1.5 size-4" /> Planifier une révision
           </Button>
@@ -248,6 +276,15 @@ function SurahDetail() {
                   </Button>
                   <Button
                     size="sm"
+                    variant="outline"
+                    onClick={() => setReciteAyah(ayah.numberInSurah)}
+                    title="Réciter ce verset et vérifier"
+                  >
+                    <Mic className="size-3.5" />
+                  </Button>
+
+                  <Button
+                    size="sm"
                     variant={status === "learned" ? "default" : "outline"}
                     onClick={() =>
                       setStatus.mutate({
@@ -298,7 +335,19 @@ function SurahDetail() {
         })}
       </div>
 
+      <RecitationDialog
+        open={reciteAyah != null}
+        onOpenChange={(next) => !next && setReciteAyah(null)}
+        title={
+          reciteAyah === "all"
+            ? `${surah.translit} (sourate complète)`
+            : `${surah.translit} · verset ${reciteAyah}`
+        }
+        reference={reciteText}
+      />
+
       <div className="mt-8 flex justify-between">
+
         {number > 1 ? (
           <Button asChild variant="outline">
             <Link to="/sourates/$id" params={{ id: String(number - 1) }}>
