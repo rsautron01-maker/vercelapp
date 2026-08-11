@@ -22,6 +22,7 @@ import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedStatistiquesRouteImport } from './routes/_authenticated/statistiques'
 import { Route as AuthenticatedTableauDeBordRouteImport } from './routes/_authenticated/tableau-de-bord'
 import { Route as AuthenticatedTajwidRouteImport } from './routes/_authenticated/tajwid'
+import { Route as ApiTranscribeRouteImport } from './routes/api/transcribe'
 import { Route as AuthenticatedSouratesIndexRouteImport } from './routes/_authenticated/sourates/index'
 import { Route as AuthenticatedSouratesIdRouteImport } from './routes/_authenticated/sourates/$id'
 
@@ -91,6 +92,11 @@ const AuthenticatedTajwidRoute = AuthenticatedTajwidRouteImport.update({
   path: '/tajwid',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiTranscribeRoute = ApiTranscribeRouteImport.update({
+  id: '/api/transcribe',
+  path: '/api/transcribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedSouratesIndexRoute =
   AuthenticatedSouratesIndexRouteImport.update({
     id: '/sourates/',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/tajwid': typeof AuthenticatedTajwidRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/tajwid': typeof AuthenticatedTajwidRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
   '/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/sourates': typeof AuthenticatedSouratesIndexRoute
 }
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/_authenticated/statistiques': typeof AuthenticatedStatistiquesRoute
   '/_authenticated/tableau-de-bord': typeof AuthenticatedTableauDeBordRoute
   '/_authenticated/tajwid': typeof AuthenticatedTajwidRoute
+  '/api/transcribe': typeof ApiTranscribeRoute
   '/_authenticated/sourates/$id': typeof AuthenticatedSouratesIdRoute
   '/_authenticated/sourates/': typeof AuthenticatedSouratesIndexRoute
 }
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/statistiques'
     | '/tableau-de-bord'
     | '/tajwid'
+    | '/api/transcribe'
     | '/sourates/$id'
     | '/sourates/'
   fileRoutesByTo: FileRoutesByTo
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/statistiques'
     | '/tableau-de-bord'
     | '/tajwid'
+    | '/api/transcribe'
     | '/sourates/$id'
     | '/sourates'
   id:
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/_authenticated/statistiques'
     | '/_authenticated/tableau-de-bord'
     | '/_authenticated/tajwid'
+    | '/api/transcribe'
     | '/_authenticated/sourates/$id'
     | '/_authenticated/sourates/'
   fileRoutesById: FileRoutesById
@@ -209,6 +221,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiTranscribeRoute: typeof ApiTranscribeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTajwidRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/transcribe': {
+      id: '/api/transcribe'
+      path: '/api/transcribe'
+      fullPath: '/api/transcribe'
+      preLoaderRoute: typeof ApiTranscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/sourates/': {
       id: '/_authenticated/sourates/'
       path: '/sourates'
@@ -358,7 +378,18 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiTranscribeRoute: ApiTranscribeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
