@@ -335,7 +335,19 @@ function SurahDetail() {
         })}
       </div>
 
+      <RecitationDialog
+        open={reciteAyah != null}
+        onOpenChange={(next) => !next && setReciteAyah(null)}
+        title={
+          reciteAyah === "all"
+            ? `${surah.translit} (sourate complète)`
+            : `${surah.translit} · verset ${reciteAyah}`
+        }
+        reference={reciteText}
+      />
+
       <div className="mt-8 flex justify-between">
+
         {number > 1 ? (
           <Button asChild variant="outline">
             <Link to="/sourates/$id" params={{ id: String(number - 1) }}>
