@@ -33,6 +33,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TajweedLegend, TajweedText } from "@/components/tajweed-text";
 import { useQuranAudio } from "@/components/quran-audio";
+import { RecitationDialog } from "@/components/recitation-dialog";
 import { cn } from "@/lib/utils";
 import { PageHeader } from "@/components/ui-kit";
 
