@@ -625,9 +625,15 @@ export const QUIZ: QuizQuestion[] = [
 ];
 
 
-export function randomQuiz(category: QuizCategory): QuizQuestion {
+/**
+ * Tire une question au hasard, en évitant celles déjà posées récemment
+ * (`exclude` = liste d'intitulés déjà vus) pour ne jamais répéter deux fois de suite.
+ */
+export function randomQuiz(category: QuizCategory, exclude: string[] = []): QuizQuestion {
   const pool = QUIZ.filter((q) => q.category === category);
-  return pool[Math.floor(Math.random() * pool.length)];
+  const fresh = pool.filter((q) => !exclude.includes(q.question));
+  const source = fresh.length > 0 ? fresh : pool;
+  return source[Math.floor(Math.random() * source.length)];
 }
 
 export function shuffle<T>(items: T[]): T[] {
