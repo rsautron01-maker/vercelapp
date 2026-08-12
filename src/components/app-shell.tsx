@@ -62,6 +62,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const { dark, toggle } = useTheme();
   const [openMobile, setOpenMobile] = useState(false);
   const { data: isAdmin } = useIsAdmin();
+  const { t } = useI18n();
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -84,7 +85,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </span>
           <span>
             <span className="block font-display text-lg font-semibold leading-none">Hifz</span>
-            <span className="text-xs text-sidebar-foreground/60">Mémorisation du Coran</span>
+            <span className="text-xs text-sidebar-foreground/60">{t("app.tagline")}</span>
           </span>
         </Link>
 
@@ -110,7 +111,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   />
                 )}
                 <item.icon className="size-4" />
-                {item.label}
+                {t(item.key)}
               </Link>
             );
           })}
@@ -126,13 +127,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   : "text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
               )}
             >
-              <ShieldCheck className="size-4" /> Administration
+              <ShieldCheck className="size-4" /> {t("nav.admin")}
             </Link>
           )}
         </nav>
 
         <Button variant="ghost" className="justify-start gap-3 text-sidebar-foreground/70" onClick={signOut}>
-          <LogOut className="size-4" /> Se déconnecter
+          <LogOut className="size-4" /> {t("nav.signout")}
         </Button>
       </aside>
 
@@ -143,14 +144,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             size="icon"
             className="lg:hidden"
             onClick={() => setOpenMobile((v) => !v)}
-            aria-label="Ouvrir le menu"
+            aria-label={t("app.menu")}
           >
             <Menu className="size-5" />
           </Button>
           <GlobalSearch />
           <div className="ml-auto flex items-center gap-1">
             <NotificationBell />
-            <Button variant="ghost" size="icon" onClick={toggle} aria-label="Changer de thème">
+            <Button variant="ghost" size="icon" onClick={toggle} aria-label={t("app.theme")}>
               {dark ? <Sun className="size-5" /> : <Moon className="size-5" />}
             </Button>
           </div>
