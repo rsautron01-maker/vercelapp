@@ -26,18 +26,19 @@ import { Button } from "@/components/ui/button";
 import { NotificationBell } from "@/components/notification-bell";
 import { GlobalSearch } from "@/components/global-search";
 import { useIsAdmin } from "@/hooks/use-admin";
+import { useI18n } from "@/lib/i18n";
 
 const NAV = [
-  { to: "/tableau-de-bord", label: "Tableau de bord", icon: LayoutDashboard },
-  { to: "/sourates", label: "Sourates", icon: BookOpen },
-  { to: "/juzz", label: "Juzz", icon: Layers },
-  { to: "/calendrier", label: "Calendrier", icon: CalendarDays },
-  { to: "/defis", label: "Défis", icon: Trophy },
-  { to: "/tajwid", label: "Tajwid", icon: GraduationCap },
-  { to: "/methode", label: "Méthode", icon: Sparkles },
-  { to: "/hadith", label: "Hadith du jour", icon: ScrollText },
-  { to: "/statistiques", label: "Statistiques", icon: BarChart3 },
-  { to: "/profil", label: "Profil", icon: UserRound },
+  { to: "/tableau-de-bord", key: "nav.dashboard", icon: LayoutDashboard },
+  { to: "/sourates", key: "nav.surahs", icon: BookOpen },
+  { to: "/juzz", key: "nav.juz", icon: Layers },
+  { to: "/calendrier", key: "nav.calendar", icon: CalendarDays },
+  { to: "/defis", key: "nav.challenges", icon: Trophy },
+  { to: "/tajwid", key: "nav.tajweed", icon: GraduationCap },
+  { to: "/methode", key: "nav.method", icon: Sparkles },
+  { to: "/hadith", key: "nav.hadith", icon: ScrollText },
+  { to: "/statistiques", key: "nav.stats", icon: BarChart3 },
+  { to: "/profil", key: "nav.profile", icon: UserRound },
 ] as const;
 
 function useTheme() {
