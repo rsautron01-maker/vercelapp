@@ -47,6 +47,11 @@ export function fetchSurahTranslit(surah: number) {
   return fetchEdition(surah, "en.transliteration");
 }
 
+/** Traduction / sens des versets (édition Alquran Cloud, ex. fr.hamidullah). */
+export function fetchSurahTranslation(surah: number, edition: string) {
+  return fetchEdition(surah, edition);
+}
+
 /** Texte arabe simple dérivé de l'édition tajwid (annotations retirées). */
 export function plainFromTajweed(text: string) {
   return stripTajweed(text);

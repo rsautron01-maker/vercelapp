@@ -6,6 +6,7 @@ import { ShieldOff } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/app-shell";
+import { I18nProvider } from "@/lib/i18n";
 import { OnboardingDialog } from "@/components/onboarding-dialog";
 import { Button } from "@/components/ui/button";
 
@@ -43,10 +44,12 @@ function AuthenticatedLayout() {
   if (ban?.banned) return <BannedScreen reason={ban.ban_reason} />;
 
   return (
-    <AppShell>
-      <OnboardingDialog />
-      <Outlet />
-    </AppShell>
+    <I18nProvider>
+      <AppShell>
+        <OnboardingDialog />
+        <Outlet />
+      </AppShell>
+    </I18nProvider>
   );
 }
 

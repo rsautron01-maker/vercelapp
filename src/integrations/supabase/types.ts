@@ -149,8 +149,10 @@ export type Database = {
           reads_arabic: string
           script_mode: string
           show_tajweed: boolean
+          show_translation: boolean
           streak: number
           tajweed_level: string
+          ui_language: string
           updated_at: string
           weekly_goal: number
           xp: number
@@ -169,8 +171,10 @@ export type Database = {
           reads_arabic?: string
           script_mode?: string
           show_tajweed?: boolean
+          show_translation?: boolean
           streak?: number
           tajweed_level?: string
+          ui_language?: string
           updated_at?: string
           weekly_goal?: number
           xp?: number
@@ -189,8 +193,10 @@ export type Database = {
           reads_arabic?: string
           script_mode?: string
           show_tajweed?: boolean
+          show_translation?: boolean
           streak?: number
           tajweed_level?: string
+          ui_language?: string
           updated_at?: string
           weekly_goal?: number
           xp?: number

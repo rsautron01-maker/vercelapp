@@ -5,9 +5,11 @@ import { Search } from "lucide-react";
 import { SURAHS } from "@/data/quran";
 import { normalize } from "@/lib/quran-api";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n";
 
 export function GlobalSearch() {
   const [query, setQuery] = useState("");
+  const { t } = useI18n();
 
   const results = useMemo(() => {
     const q = normalize(query);
@@ -27,7 +29,7 @@ export function GlobalSearch() {
       <Input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Rechercher une sourate, un numéro…"
+        placeholder={t("search.placeholder")}
         className="pl-9"
       />
       {results.length > 0 && (
