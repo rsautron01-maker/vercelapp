@@ -1,4 +1,5 @@
 import { Bell } from "lucide-react";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -7,6 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useReviews, useTasks, today } from "@/hooks/use-hifz";
+import { scheduleDailyReviewReminder } from "@/lib/local-reminders";
 
 export function NotificationBell() {
   const { data: reviews = [] } = useReviews();
@@ -15,6 +17,10 @@ export function NotificationBell() {
   const dueReviews = reviews.filter((r) => !r.done && r.due_date <= today());
   const openTasks = tasks.filter((t) => !t.done);
   const count = dueReviews.length + openTasks.length;
+
+  useEffect(() => {
+    void scheduleDailyReviewReminder(count);
+  }, [count]);
 
   return (
     <Popover>

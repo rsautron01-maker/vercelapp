@@ -75,9 +75,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen w-full bg-background">
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar px-4 py-6 text-sidebar-foreground transition-transform lg:static lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar px-4 pb-6 text-sidebar-foreground transition-transform lg:static lg:translate-x-0",
           openMobile ? "translate-x-0" : "-translate-x-full",
         )}
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 1.5rem)",
+        }}
       >
         <Link to="/tableau-de-bord" className="mb-8 flex items-center gap-3 px-2">
           <span className="flex size-10 items-center justify-center rounded-xl gradient-gold text-lg font-bold text-gold-foreground">
@@ -138,7 +142,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-xl lg:px-8">
+        <header
+          className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-xl lg:px-8"
+          style={{ paddingTop: "env(safe-area-inset-top)", height: "calc(4rem + env(safe-area-inset-top))" }}
+        >
           <Button
             variant="ghost"
             size="icon"

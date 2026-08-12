@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import { toast } from "sonner";
 
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -71,15 +70,17 @@ function AuthPage() {
   }
 
   async function googleSignIn() {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    // Connexion Google directe via Supabase (indépendant de Lovable).
+    // Nécessite d'avoir activé le provider Google dans Supabase Dashboard
+    // > Authentication > Providers > Google, avec un Client ID/Secret Google Cloud.
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
     });
-    if (result.error) {
+    if (error) {
       toast.error("La connexion Google a échoué.");
-      return;
     }
-    if (result.redirected) return;
-    navigate({ to: "/tableau-de-bord" });
+    // En cas de succès, Supabase redirige automatiquement vers le provider.
   }
 
   return (

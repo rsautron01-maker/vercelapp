@@ -6,7 +6,11 @@ export const Route = createFileRoute("/api/transcribe")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apiKey = process.env["LOVABLE_API_KEY"];
+        // Anciennement routé via le gateway IA de Lovable (LOVABLE_API_KEY).
+        // Hors Lovable, on appelle directement l'API OpenAI.
+        // -> crée une clé sur https://platform.openai.com/api-keys
+        // -> ajoute OPENAI_API_KEY dans les variables d'env Vercel.
+        const apiKey = process.env["OPENAI_API_KEY"];
         if (!apiKey) {
           return new Response(JSON.stringify({ error: "Transcription indisponible" }), {
             status: 503,
@@ -30,11 +34,11 @@ export const Route = createFileRoute("/api/transcribe")({
         }
 
         const upstream = new FormData();
-        upstream.append("model", "openai/gpt-4o-transcribe");
+        upstream.append("model", "gpt-4o-transcribe");
         upstream.append("file", file, "recitation.wav");
         upstream.append("language", "ar");
 
-        const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
+        const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
           method: "POST",
           headers: { Authorization: `Bearer ${apiKey}` },
           body: upstream,

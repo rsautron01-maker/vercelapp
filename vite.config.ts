@@ -9,7 +9,12 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
     server: { entry: "server" },
+  },
+  // Détaché de Lovable Cloud (Cloudflare) : build pour Vercel.
+  // Vercel définit VERCEL=1 pendant le build, donc l'auto-détection marcherait
+  // aussi, mais on le pin explicitement pour ne pas dépendre de ça.
+  nitro: {
+    preset: "vercel",
   },
 });

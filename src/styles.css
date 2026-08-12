@@ -148,11 +148,34 @@
     border-color: var(--color-border);
   }
 
+  html {
+    height: 100%;
+    /* Empêche le "bounce" de scroll iOS de révéler du fond blanc derrière la WebView */
+    overscroll-behavior-y: none;
+  }
+
   body {
+    min-height: 100%;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+    /* Safe areas iPhone (notch / home indicator) */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    /* Cible tactile confortable + pas de double-tap zoom sur mobile */
+    touch-action: manipulation;
   }
 
   h1,
